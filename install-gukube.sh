@@ -10,7 +10,6 @@ KUBE_VERSION=1.21
 KUBE_SVC_SUBNET=172.24.24.0/24
 KUBE_POD_SUBNET=172.25.0.0/16
 KUBE_TMPDIR=$HOME/my-kube
-#host_wanip=$(/sbin/ip -o -4 addr list $host_wanif | awk '{print $4}' | cut -d/ -f1)
 HOST_VIF_NAME=virbr2
 HOST_VIF_IP=172.24.25.1
 CGROUP_DRIVER=systemd       #systemd, cgroupfs
@@ -19,7 +18,7 @@ CALICO_INSTALL=yes
 DNSUTILS_INSTALL=yes
 METALLB_INSTALL=yes
 METALLB_VERSION=0.10.2
-METALLB_ADDRESS_RANGE=172.24.25.111-172.24.25.250
+#METALLB_ADDRESS_RANGE=172.24.25.111-172.24.25.250
 NGINX_INGRESS_INSTALL=yes
 KUBE_DASHBOARD_INSTALL=yes
 CERT_MANAGER_INSTALL=yes
@@ -52,6 +51,7 @@ firewalld_rules() {
     #firewall-cmd --permanent --zone=public --add-rich-rule "rule family=ipv4 source address=$HOST_VIF_IP/32 accept" #Access pods using NodePort
     firewall-cmd --permanent --zone=public --add-rich-rule "rule family=ipv4 source address=${KUBE_SVC_SUBNET} accept"
     firewall-cmd --permanent --zone=public --add-rich-rule "rule family=ipv4 destination address=${KUBE_SVC_SUBNET} accept"
+    firewall-cmd --permanent --zone=public --add-rich-rule "rule family=ipv4 destination address=$(echo -n "${HOST_VIF_IP}" | sed 's@[^.]*$@0/24@') accept"
     firewall-cmd --permanent --zone=public --add-masquerade
     firewall-cmd --reload
 }
@@ -475,7 +475,12 @@ install_metallb() {
     case ${METALLB_INSTALL} in
         yes|on|true)
             printf '%s\n' "[metallb] Writing 'metallb_config.yaml' manifest file." >&2
-            cat <<EOF | tee ${KUBE_TMPDIR}/metallb_config.yaml &>/dev/null
+
+            if [[ -z ${METALLB_ADDRESS_RANGE} ]]; then
+                METALLB_ADDRESS_RANGE=$(echo -n "${HOST_VIF_IP}" | sed 's@[^.]*$@100@')-$(echo -n "${HOST_VIF_IP}" | sed 's@[^.]*$@200@')
+            fi
+
+            cat <<EOF | tee ${KUBE_TMPDIR}/metallb/metallb-config.yaml &>/dev/null
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -494,7 +499,7 @@ EOF
             kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v${METALLB_VERSION}/manifests/metallb.yaml
 
             printf '%s\n' "[metallb] Applied MetalLB ConfigMap." >&2
-            kubectl apply -f ${KUBE_TMPDIR}/metallb_config.yaml
+            kubectl apply -f ${KUBE_TMPDIR}/metallb/metallb-config.yaml
 
             check_pod controller metallb-system
         ;;
@@ -791,8 +796,6 @@ EOF
     if [ ! -d "${KUBE_TMPDIR}" ]; then mkdir ${KUBE_TMPDIR}; fi
 }
 
-
-
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root" 1>&2
     exit 1
@@ -826,6 +829,7 @@ kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
 ### Install Kubernetes services
 install_storageclass_localhostpath
 install_calico
+clone_gukube_gitrepo
 install_helm
 install_dnsutils
 install_metallb
@@ -838,4 +842,7 @@ install_grafana
 printf '%s\n\n' "[kubernetes] Installation completed" >&2
 kubectl get pods -A -o wide
 
+printf '%s\n' "[system] Destroying all evidence" >&2
+
 printf '%s\n' "Kubernetes Dashboard Bearer Token: ${kubedashboard_token}" >&2
+
