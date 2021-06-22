@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prometheus-pv
+  labels:
+    app: prometheus
+    type: local
+spec:
+  storageClassName: local-sc
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: prometheus-pvc
+    namespace: prometheus
+  capacity:
+    storage: 5Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: "/data/prometheus"
