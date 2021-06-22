@@ -1,0 +1,19 @@
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9113"
+    spec:
+      serviceAccountName: nginx-ingress
+      containers:
+      - name: nginx-ingress
+        ports:
+        - name: prometheus
+          containerPort: 9113
+        args:
+          - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
+          - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
+          - -enable-prometheus-metrics
+          - -enable-custom-resources
+          - -enable-tls-passthrough
