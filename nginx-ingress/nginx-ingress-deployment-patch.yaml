@@ -15,5 +15,6 @@ spec:
           - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
           - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
           - -enable-prometheus-metrics
+          - -global-configuration=$(POD_NAMESPACE)/nginx-configuration
           - -enable-custom-resources
           - -enable-tls-passthrough
