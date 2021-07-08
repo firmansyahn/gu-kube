@@ -1,0 +1,25 @@
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9113"
+        prometheus.io/scheme: http
+    spec:
+      #dnsPolicy: ClusterFirstWithHostNet
+      #hostNetwork: true
+      containers:
+      - name: nginx-ingress
+        ports:
+        - name: prometheus
+          containerPort: 9113
+        args:
+          - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
+          - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
+         #- -v=3 # Enables extensive logging. Useful for troubleshooting.
+          - -report-ingress-status
+         #- -external-service=nginx-ingress
+          - -enable-prometheus-metrics
+          - -global-configuration=$(POD_NAMESPACE)/nginx-configuration
+          - -enable-custom-resources
+          - -enable-tls-passthrough
