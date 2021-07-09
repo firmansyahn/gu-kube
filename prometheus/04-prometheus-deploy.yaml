@@ -8,7 +8,8 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 10Gi
+  storageClassName: local-hostpath
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -63,9 +64,9 @@ spec:
   - protocol: TCP
     port: 9090
     targetPort: http-prometheus
-#   nodePort: 30909
-  externalTrafficPolicy: Local
-  type: LoadBalancer
+  #externalTrafficPolicy: Local
+  sessionAffinity: ClientIP
+  #type: LoadBalancer
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

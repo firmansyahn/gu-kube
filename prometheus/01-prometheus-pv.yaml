@@ -6,13 +6,13 @@ metadata:
     app: prometheus
     type: local
 spec:
-  storageClassName: local-sc
+  storageClassName: local-hostpath
   persistentVolumeReclaimPolicy: Retain
   claimRef:
     name: prometheus-pvc
     namespace: prometheus
   capacity:
-    storage: 5Gi
+    storage: 10Gi
   accessModes:
   - ReadWriteOnce
   hostPath:

@@ -14,6 +14,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
+  storageClassName: local-hostpath
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -82,13 +83,13 @@ metadata:
 spec:
   selector:
     app: grafana
-  type: LoadBalancer
   ports:
   - port: 3000
     protocol: TCP
     targetPort: http-grafana
-  externalTrafficPolicy: Local
-  sessionAffinity: None
+  #externalTrafficPolicy: Local
+  sessionAffinity: ClientIP
+  #type: LoadBalancer
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

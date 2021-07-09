@@ -49,19 +49,18 @@ spec:
           name: jenkins-home
         securityContext: {}
       volumes:
-        - name: jenkins-home
-          persistentVolumeClaim:
-            claimName: jenkins-pvc
+      - name: jenkins-home
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: jenkins-svc
+  name: jenkins
   namespace: jenkins
   labels:
     app: jenkins
 spec:
-  #type: NodePort
   selector:
     app: jenkins
   ports:
@@ -77,6 +76,7 @@ spec:
   #externalTrafficPolicy: Local
   #clusterIP: 172.24.24.51
   #loadBalancerIP
+  #type: NodePort
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -96,6 +96,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: jenkins-svc
+            name: jenkins
             port:
               number: 8080
