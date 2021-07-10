@@ -5,6 +5,7 @@ metadata:
   labels:
     app: prometheus
     type: local
+    app.kubernetes.io/component: prometheus
 spec:
   storageClassName: local-hostpath
   persistentVolumeReclaimPolicy: Retain

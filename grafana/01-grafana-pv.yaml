@@ -9,7 +9,7 @@ spec:
   storageClassName: local-hostpath
   persistentVolumeReclaimPolicy: Retain
   claimRef:
-    name: grafana-pvc
+    name: grafana-data
     namespace: grafana
   capacity:
     storage: 5Gi

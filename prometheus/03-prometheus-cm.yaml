@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: prometheus-config
   namespace: prometheus
+  labels:
+    app.kubernetes.io/component: prometheus
 data:
   prometheus.yml: |
     global:
