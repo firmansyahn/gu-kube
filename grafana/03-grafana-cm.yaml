@@ -2,52 +2,61 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-ini
+  namespace: grafana
   labels:
     app.kubernetes.io/component: grafana
 data:
   grafana.ini: |
-    [analytics]
-    check_for_updates = true
-    #[grafana_net]
-    #url = https://grafana.net
-    [log]
-    mode = console
     [paths]
-    data = /var/lib/grafana/data
+    data = /var/lib/grafana
     logs = /var/log/grafana
     plugins = /var/lib/grafana/plugins
+
+    [analytics]
+    check_for_updates = true
+    #google_analytics_ua_id =
+    #google_tag_manager_id =
+
+    [log]
+    mode = console
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-datasources
+  namespace: grafana
   labels:
     app.kubernetes.io/component: grafana
 data:
   datasources.yaml: |
     apiVersion: 1
+    deleteDatasources:
+    - name: Prometheus
+      orgId: 1
     datasources:
-    - access: proxy
+    - name: Prometheus
+      access: proxy
+      editable: false
       isDefault: true
-      name: prometheus
       type: prometheus
-      url: http://$APP_INSTANCE_NAME-prometheus:9090
+      url: http://prometheus.prometheus.svc.nebula.moratel.id:9090
       version: 1
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-dashboardproviders
+  namespace: grafana
   labels:
     app.kubernetes.io/component: grafana
 data:
   dashboardproviders.yaml: |
     apiVersion: 1
     providers:
-    - disableDeletion: false
+    - name: 'default'
+      disableDeletion: false
       editable: true
-      folder: ""
-      name: default
+      folder: ''
       options:
         path: /var/lib/grafana/dashboards
       orgId: 1
