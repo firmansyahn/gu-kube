@@ -47,3 +47,4 @@ subjects:
 - kind: ServiceAccount
   name: prometheus
   namespace: prometheus
+---
