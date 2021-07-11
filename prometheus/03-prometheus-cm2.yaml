@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/component: prometheus
 data:
-  prometheus.yml: |
+  prometheus.yaml: |
     global:
       scrape_interval: 30s
 
