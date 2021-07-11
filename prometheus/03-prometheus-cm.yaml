@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: prometheus-config
+  namespace: prometheus
   labels:
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: prometheus
@@ -291,7 +292,7 @@ data:
     \   - \"action\": \"keep\"\n      \"regex\": \"http\"\n      \"source_labels\":
     \n      - \"__meta_kubernetes_endpoint_port_name\"\n    \"scheme\": \"http\"\n
     \   \"timeout\": \"10s\"\n\"global\": \n  \"scrape_interval\": \"15s\"\n\"rule_files\":
-    \n- \"/etc/config/rules.yaml\"\n- \"/etc/config/alerts.yaml\"\n\"scrape_configs\":
+    \n- \"/prometheus/config/rules.yaml\"\n- \"/prometheus/config/alerts.yaml\"\n\"scrape_configs\":
     \n- \"job_name\": \"kubernetes-service-endpoints\"\n  \"kubernetes_sd_configs\":
     \n  - \"role\": \"endpoints\"\n  \"relabel_configs\": \n  - \"action\": \"labelmap\"\n
     \   \"regex\": \"__meta_kubernetes_service_label_(.+)\"\n  - \"action\": \"keep\"\n
