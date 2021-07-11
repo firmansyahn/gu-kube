@@ -34,43 +34,45 @@ spec:
     metadata:
       labels: *Labels
     spec:
+      securityContext:
+        fsGroup: 2001
       serviceAccountName: prometheus
       containers:
-        - name: prometheus-server
-          image: prom/prometheus:latest
-          imagePullPolicy: "IfNotPresent"
-          args:
-          - --config.file=/prometheus/config/prometheus.yaml
-          - --storage.tsdb.path=/prometheus/data
-          - --web.console.libraries=/usr/share/prometheus/console_libraries
-          - --web.console.templates=/usr/share/prometheus/consoles
-          - --web.enable-lifecycle
-          ports:
-          - name: http-prometheus
-            containerPort: 9090
-          readinessProbe:
-            httpGet:
-              path: /-/ready
-              port: 9090
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
-          livenessProbe:
-            httpGet:
-              path: /-/healthy
-              port: 9090
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
-          # based on 10 running nodes with 30 pods each
-          resources:
-            requests:
-              cpu: 200m
-              memory: 1000Mi
-          volumeMounts:
-            - name: config-volume
-              mountPath: /prometheus/config
-            - name: storage-tsdb
-              mountPath: /prometheus/data
-              subPath: ""
+      - name: prometheus-server
+        image: prom/prometheus:latest
+        imagePullPolicy: "IfNotPresent"
+        args:
+        - --config.file=/prometheus/config/prometheus.yaml
+        - --storage.tsdb.path=/prometheus/data
+        - --web.console.libraries=/usr/share/prometheus/console_libraries
+        - --web.console.templates=/usr/share/prometheus/consoles
+        - --web.enable-lifecycle
+        ports:
+        - name: http-prometheus
+          containerPort: 9090
+        readinessProbe:
+          httpGet:
+            path: /-/ready
+            port: 9090
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: 9090
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
+        # based on 10 running nodes with 30 pods each
+        resources:
+          requests:
+            cpu: 200m
+            memory: 1000Mi
+        volumeMounts:
+        - name: config-volume
+          mountPath: /prometheus/config
+        - name: storage-tsdb
+          mountPath: /prometheus/data
+          subPath: ""
       terminationGracePeriodSeconds: 300
       volumes:
       - name: config-volume

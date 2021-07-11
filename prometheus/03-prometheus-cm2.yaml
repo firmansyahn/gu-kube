@@ -16,11 +16,6 @@ data:
        #static_configs:
         #- targets: ['localhost:9090']
 
-    - job_name: 'nginx-ingress'
-      scrape_interval: 30s
-      static_configs:
-      - targets: ['nginx-ingress:9113']
-
     - job_name: 'kubernetes-apiservers'
       kubernetes_sd_configs:
       - role: endpoints

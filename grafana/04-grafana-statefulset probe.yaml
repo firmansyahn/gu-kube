@@ -7,7 +7,7 @@ metadata:
     k8s-app: grafana
     app.kubernetes.io/component: grafana
 spec:
-  serviceName: grafana
+  serviceName: grafana-svc
   replicas: 1
   selector:
     matchLabels: *Labels
@@ -26,55 +26,49 @@ spec:
           image: grafana/grafana:latest
           imagePullPolicy: IfNotPresent
           ports:
-          - name: http-grafana
-            containerPort: 3000
-            protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /robots.txt
-              port: 3000
-              scheme: HTTP
-            initialDelaySeconds: 10
-            periodSeconds: 30
-            successThreshold: 1
-            timeoutSeconds: 2
+            - name: http-grafana
+              containerPort: 3000
+              protocol: TCP
           livenessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
+            httpGet:
+              path: /api/health
               port: 3000
-            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 60
+            timeoutSeconds: 9
+            failureThreshold: 10
+            periodSeconds: 10
           resources:
             requests:
               cpu: 250m
               memory: 700Mi
           volumeMounts:
-          - name: config
-            mountPath: "/etc/grafana/"
-          - name: datasources
-            mountPath: "/etc/grafana/provisioning/datasources/"
-          - name: dashboardproviders
-            mountPath: "/etc/grafana/provisioning/dashboards/"
-          - name: dashboards
-            mountPath: "/var/lib/grafana/dashboards"
-          - name: grafana-data
-            mountPath: "/var/lib/grafana"
+            - name: config
+              mountPath: "/etc/grafana/"
+            - name: datasources
+              mountPath: "/etc/grafana/provisioning/datasources/"
+            - name: dashboardproviders
+              mountPath: "/etc/grafana/provisioning/dashboards/"
+            - name: dashboards
+              mountPath: "/var/lib/grafana/dashboards"
+            - name: grafana-data
+              mountPath: "/var/lib/grafana"
       volumes:
-      - name: config
-        configMap:
-          name: grafana-ini
-      - name: datasources
-        configMap:
-          name: grafana-datasources
-      - name: dashboardproviders
-        configMap:
-          name: grafana-dashboardproviders
-      - name: dashboards
-        configMap:
-          name: grafana-dashboards
+        - name: config
+          configMap:
+            name: grafana-ini
+        - name: datasources
+          configMap:
+            name: grafana-datasources
+        - name: dashboardproviders
+          configMap:
+            name: grafana-dashboardproviders
+        - name: dashboards
+          configMap:
+            name: grafana-dashboards
   volumeClaimTemplates:
   - metadata:
       name: grafana-data
@@ -90,7 +84,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: grafana
+  name: grafana-svc
   namespace: grafana
   labels:
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
