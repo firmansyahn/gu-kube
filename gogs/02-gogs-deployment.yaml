@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gogs-data
+  namespace: gogs
+  labels:
+    app.kubernetes.io/component: gogs
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: local-hostpath
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gogs
+  namespace: gogs
+  labels: &Labels
+    app: gogs
+    #app.kubernetes.io/name: $APP_INSTANCE_NAME
+    app.kubernetes.io/component: gogs
+    k8s-app: gogs
+spec:
+  selector:
+    matchLabels: *Labels
+  template:
+    metadata:
+      labels: *Labels
+    spec:
+      securityContext:
+        fsGroup: 1001003
+        supplementalGroups:
+        - 0    
+      containers:
+      - name: gogs
+        image: gogs/gogs:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 22
+          name: gogs-ssh
+          protocol: TCP  
+        - containerPort: 3000
+          name: gogs-http
+          protocol: TCP
+        env:
+        - name: SOCAT_LINK
+          value: "false"
+        resources:
+          requests:
+            cpu: 250m
+            memory: 750Mi
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: gogs-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gogs
+  namespace: gogs
+  labels:
+    #app.kubernetes.io/name: $APP_INSTANCE_NAME
+    app.kubernetes.io/component: gogs
+    k8s-app: gogs
+spec:
+  selector:
+    app: gogs
+  ports:
+  - name: ssh
+    port: 22
+    protocol: TCP
+    targetPort: gogs-ssh
+  - name: http
+    port: 3000
+    protocol: TCP
+    targetPort: gogs-http
+  #externalTrafficPolicy: Local
+  sessionAffinity: ClientIP
+  #type: LoadBalancer
+---

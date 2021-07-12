@@ -5,6 +5,7 @@ metadata:
   namespace: grafana
   labels:
     app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: monitoring-system
 data:
   grafana.ini: |
     [paths]
@@ -12,18 +13,30 @@ data:
     logs = /var/log/grafana
     plugins = /var/lib/grafana/plugins
 
+    [server]
+    ;domain = 
+    ;root_url = 
+
     [analytics]
     check_for_updates = true
     ;google_analytics_ua_id =
     ;google_tag_manager_id =
 
-    [log]
-    mode = console
+    [users]
+    allow_sign_up = false
+    allow_org_create = false
+
+    [auth.anonymous]
+    enabled = false
+    hide_version = true
 
     [auth.ldap]
     enabled = false
-    ;config_file = /etc/grafana/ldap.toml
-    ;allow_sign_up = true
+    config_file = /etc/grafana/ldap.toml
+    allow_sign_up = false
+
+    [log]
+    mode = console
 
   ldap.toml: |
     [[servers]]
@@ -40,6 +53,7 @@ metadata:
   namespace: grafana
   labels:
     app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: monitoring-system
 data:
   datasources.yaml: |
     apiVersion: 1
@@ -49,10 +63,10 @@ data:
     datasources:
     - name: Prometheus
       access: proxy
-      editable: true
+      editable: false
       isDefault: true
       type: prometheus
-      url: http://prometheus.prometheus.svc.nebula.moratel.id:9090
+      url: http://prometheus-0.prometheus.prometheus:9090
       version: 1
 ---
 apiVersion: v1
@@ -62,6 +76,7 @@ metadata:
   namespace: grafana
   labels:
     app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: monitoring-system
 data:
   dashboardproviders.yaml: |
     apiVersion: 1
@@ -74,4 +89,40 @@ data:
         path: /var/lib/grafana/dashboards
       orgId: 1
       type: file
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-provisioning-acl
+  namespace: grafana
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: monitoring-system
+data:
+  sample.yaml: |
+    apiVersion: 1
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-provisioning-notifiers
+  namespace: grafana
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: monitoring-system
+data:
+  sample.yaml: |
+    apiVersion: 1
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-provisioning-plugins
+  namespace: grafana
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: monitoring-system
+data:
+  sample.yaml: |
+    apiVersion: 1
 ---

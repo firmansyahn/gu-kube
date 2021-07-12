@@ -1,0 +1,38 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gogs-certs
+  namespace: gogs
+  labels:
+    app.kubernetes.io/component: gogs
+    app.kubernetes.io/part-of: git
+spec:
+  secretName: gogs-tls
+  isCA: false
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned-issuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  subject:
+    countries:
+    - ID
+    organizations:
+    - Valkyrie
+    organizationalUnits:
+    - "Valhalla Default Certificate"
+    localities:
+    - Asgard
+    provinces:
+    - Olympus
+   #streetAddresses:
+   #- Asgard
+   #postalCodes:
+   #- "12000"
+   #serialNumber: "1234567890"
+  dnsNames:
+  - gogs.cluster.local
+  - git.jakwifi.id
+---
