@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: monitoring-system
+spec:
+  destination:
+    #name: prometheus
+    namespace: prometheus
+    server: https://kubernetes.default.svc
+  source:
+    path: prometheus
+    repoURL: 'https://gogs.gogs.svc:3000/admingogs/infra.git'
+    targetRevision: HEAD
+  project: default

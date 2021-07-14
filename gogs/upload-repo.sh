@@ -13,6 +13,8 @@ git init
 #Add remote
 git remote add origin https://gogs.gogs.svc:3000/admingogs/infrastructure.git
 
+#git remote set-url origin https://admingogs:admin@gogs.gogs.svc:3000/admingogs/infrastructure.git
+
 #stage all files in the current directory and subdirectory
 git add .
 
@@ -22,4 +24,16 @@ git commit -a -m "Commit"
 #Send changes to Git
 git push -u origin master
 
+#Download the latest changes in the project
+git pull https://gogs.gogs.svc:3000/admingogs/infra.git master
+
 git status
+git remote -v
+
+
+git add . && git commit -a -m "Commit" && git push -u origin master
+
+git clone https://gogs.gogs.svc:3000/admingogs/infra.git /git/gogs-git
+git init /git/gogs-git
+git remote add origin https://admingogs:admin@gogs.gogs.svc:3000/admingogs/infra.git
+git add /git/gogs-git/* && git commit -a -m "Commit" && git push -u origin master
