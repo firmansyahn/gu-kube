@@ -42,7 +42,7 @@ spec:
   upstreams:
   - name: gogs-ssh
     service: gogs
-    port: 22
+    port: 3022
   action:
     pass: gogs-ssh
 ---

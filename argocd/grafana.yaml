@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  labels:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/part-of: monitoring-system
+spec:
+  destination:
+    #name: grafana
+    namespace: grafana
+    server: https://kubernetes.default.svc
+  source:
+    path: grafana
+    repoURL: 'https://gogs.gogs.svc:3000/admingogs/infra.git'
+    targetRevision: HEAD
+  project: default

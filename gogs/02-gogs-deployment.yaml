@@ -5,6 +5,7 @@ metadata:
   namespace: gogs
   labels:
     app.kubernetes.io/component: gogs
+    app.kubernetes.io/part-of: git
 spec:
   accessModes:
   - ReadWriteOnce
@@ -22,6 +23,7 @@ metadata:
     app: gogs
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: gogs
+    app.kubernetes.io/part-of: git
     k8s-app: gogs
 spec:
   selector:
@@ -39,7 +41,7 @@ spec:
         image: gogs/gogs:latest
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 22
+        - containerPort: 3022
           name: gogs-ssh
           protocol: TCP  
         - containerPort: 3000
@@ -74,7 +76,7 @@ spec:
     app: gogs
   ports:
   - name: ssh
-    port: 22
+    port: 3022
     protocol: TCP
     targetPort: gogs-ssh
   - name: http

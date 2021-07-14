@@ -24,6 +24,7 @@ metadata:
   name: gogs
   labels:
     app.kubernetes.io/component: gogs
+    app.kubernetes.io/part-of: git
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -32,4 +33,5 @@ metadata:
   namespace: gogs
   labels:
     app.kubernetes.io/component: gogs
+    app.kubernetes.io/part-of: git
 ---

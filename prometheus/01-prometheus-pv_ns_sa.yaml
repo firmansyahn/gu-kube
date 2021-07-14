@@ -28,3 +28,12 @@ metadata:
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/part-of: monitoring-system
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: prometheus
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: monitoring-system
+---
