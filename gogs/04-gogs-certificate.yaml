@@ -26,13 +26,16 @@ spec:
     localities:
     - Asgard
     provinces:
-    - Olympus
+    - Yggdrasil
    #streetAddresses:
-   #- Asgard
+   #- Vigrid
    #postalCodes:
    #- "12000"
    #serialNumber: "1234567890"
   dnsNames:
-  - gogs.cluster.local
+  - gogs
+  - gogs.gogs
+  - gogs.gogs.svc
+  - gogs.gogs.svc.cluster.local
   - git.jakwifi.id
 ---

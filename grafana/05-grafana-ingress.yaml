@@ -8,16 +8,16 @@ metadata:
     app.kubernetes.io/part-of: monitoring-system
   annotations:
     #cert-manager.io/cluster-issuer: "letsencrypt-prd"
-    cert-manager.io/cluster-issuer: "selfsigned-issuer"
+    #cert-manager.io/cluster-issuer: "selfsigned-issuer
     acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - grafana.cluster.local
+    - grafana.grafana.svc
     secretName: grafana-tls
   rules:
-  - host: grafana.cluster.local
+  - host: grafana.grafana.svc.cluster.local
     http:
       paths:
       - path: /
