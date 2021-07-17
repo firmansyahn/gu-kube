@@ -1,0 +1,15 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-config
+  namespace: nginx-ingress
+data:
+  #client-max-body-size: "2m"
+  http2: "True"
+  proxy-connect-timeout: "60s"
+  proxy-read-timeout: "60s"
+  proxy-send-timeout: "60s"
+  server-tokens: "off"
+  worker-cpu-affinity: "auto"
+
+---

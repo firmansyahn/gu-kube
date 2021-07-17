@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-server-addons
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: argocd
+spec:
+  destination:
+    #name: 
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  source:
+    path: argocd
+    repoURL: 'https://github.com/samsara238/infra-test1.git'
+    targetRevision: HEAD
+  project: default
+  syncPolicy: {}

@@ -12,6 +12,7 @@ spec:
     server: https://kubernetes.default.svc
   source:
     path: grafana
-    repoURL: 'https://gogs.gogs.svc:3000/admingogs/infra.git'
+    repoURL: 'https://github.com/samsara238/infra-test1.git'
     targetRevision: HEAD
   project: default
+  syncPolicy: {}

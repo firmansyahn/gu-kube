@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dns-utility
+  labels:
+    app.kubernetes.io/component: dnsutils
+    app.kubernetes.io/part-of: dns
+spec:
+  destination:
+    #name: 
+    namespace: default
+    server: https://kubernetes.default.svc
+  source:
+    path: content/en/examples/admin/dns/
+    repoURL: 'https://github.com/kubernetes/website.git'
+    targetRevision: HEAD
+  project: default
+  syncPolicy: {}

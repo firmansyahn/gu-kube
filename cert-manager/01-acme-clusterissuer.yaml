@@ -2,6 +2,8 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-stg
+  labels:
+    app.kubernetes.io/part-of: cert-manager
 spec:
   acme:
     # The ACME server URL
@@ -22,6 +24,8 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prd
+  labels:
+    app.kubernetes.io/part-of: cert-manager
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory

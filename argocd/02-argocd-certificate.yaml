@@ -1,0 +1,41 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argocd-server-certs
+  namespace: argocd
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+spec:
+  secretName: argocd-server-tls
+  isCA: false
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned-issuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  subject:
+    countries:
+    - ID
+    organizations:
+    - Valkyrie
+    organizationalUnits:
+    - "Argo CD Server"
+    localities:
+    - Asgard
+    provinces:
+    - Yggdrasil
+   #streetAddresses:
+   #- Vigrid
+   #postalCodes:
+   #- "12000"
+   #serialNumber: "1234567890"
+  dnsNames:
+  - argocd-server
+  - argocd-server.argocd
+  - argocd-server.argocd.svc
+  - argocd-server.argocd.svc.cluster.local
+---

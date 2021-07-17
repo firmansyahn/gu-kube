@@ -17,6 +17,79 @@ data:
        #static_configs:
         #- targets: ['localhost:9090']
 
+    # This rules will auto-discover kube-dns. Only if Prometheus annotations is "true"
+    - job_name: kubernetes-service-endpoints
+      kubernetes_sd_configs:
+      - role: endpoints
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_service_label_(.+)
+      - action: keep
+        regex: true
+        source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+      - action: replace
+        regex: (.+)
+        source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+        target_label: __metrics_path__
+      - action: replace
+        regex: (https?)
+        source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+        target_label: __scheme__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels: 
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - action: replace
+        source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - action: replace
+        source_labels: [__meta_kubernetes_endpoints_name]
+        target_label: endpoint
+      - action: replace
+        source_labels: [__meta_kubernetes_service_name]
+        target_label: service
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_name]
+        target_label: instance
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_container_name]
+        target_label: container
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_node_name]
+        target_label: node
+
+    - job_name: kubernetes-services
+      kubernetes_sd_configs: 
+      - role: service
+      metrics_path: /probe
+      params:
+        module:
+        - http_2xx
+      relabel_configs: 
+      - action: labelmap
+        regex: __meta_kubernetes_service_label_(.+)
+      - source_labels: [__address__]
+        target_label: __param_target
+      - replacement: blackbox
+        target_label: __address__
+      - source_labels: [__param_target]
+        target_label: instance
+      - action: keep
+        regex: true
+        source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
+      - action: replace
+        source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+
     - job_name: apiserver
       kubernetes_sd_configs: 
       - role: endpoints
@@ -30,28 +103,14 @@ data:
         - __meta_kubernetes_service_name
       - action: keep
         regex: https
-        source_labels: 
-        - __meta_kubernetes_endpoint_port_name
+        source_labels: [__meta_kubernetes_endpoint_port_name]
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
       scheme: https
       tls_config: 
         ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         insecure_skip_verify: true
-      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
 
-    - job_name: 'kubernetes-nodes'
-      kubernetes_sd_configs:
-      - role: node
-      scheme: https
-      tls_config:
-        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        insecure_skip_verify: true
-      authorization:
-        credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-      relabel_configs:
-      - action: labelmap
-        regex: __meta_kubernetes_node_label_(.+)
-
-    - job_name: 'kubernetes-cadvisor'
+    - job_name: 'cadvisor'
       kubernetes_sd_configs:
       - role: node
       scheme: https
@@ -64,18 +123,22 @@ data:
       relabel_configs:
       - action: labelmap
         regex: __meta_kubernetes_node_label_(.+)
+      - action: replace
+        source_labels: [__meta_kubernetes_node_name]
+        target_label: node
 
     - job_name: 'kube-state-metrics'
       kubernetes_sd_configs: 
       - role: service
-      relabel_configs: 
+      relabel_configs:
       - action: labelmap
         regex: __meta_kubernetes_service_label_(.+)
       - action: keep
-        regex: prometheus;kube-state-metrics
+        regex: kube-system;kube-state-metrics
         source_labels: 
         - __meta_kubernetes_namespace
-        - __meta_kubernetes_service_label_k8s_app
+        - __meta_kubernetes_service_label_app_kubernetes_io_name
+        #- __meta_kubernetes_service_label_k8s_app
 
     - job_name: 'kubelet'
       kubernetes_sd_configs: 
@@ -90,11 +153,13 @@ data:
       - action: labelmap
         regex: __meta_kubernetes_node_label_(.+)
       - action: replace
-        regex: ([^:]+)(?::\\d+)?
-        replacement: $1:10255
-        source_labels: 
-        - __address__
+        regex: ([^:]+)(?::\d+)?
+        replacement: $1:10250
+        source_labels: [__address__]
         target_label: __address__
+      - action: replace
+        source_labels: [__meta_kubernetes_node_name]
+        target_label: node
 
     # Pods auto discovery when Prometheus annotations is "true"
     # The relabeling allows the actual pod scrape endpoint to be configured via the following annotations:
@@ -103,39 +168,89 @@ data:
     # * `prometheus.io/port`: Scrape the pod on the indicated port instead of the pod's declared ports (default is a port-free target if none are declared).
     # * `prometheus.io/scheme`:
     # References: https://docs.sysdig.com/en/enable-prometheus-native-service-discovery.html
-    - job_name: 'kubernetes-pods'
+
+    - job_name: kubernetes-pods
       tls_config:
         insecure_skip_verify: true
-      kubernetes_sd_configs:
+      kubernetes_sd_configs: 
       - role: pod
       relabel_configs:
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-        action: keep
-        regex: true
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-        action: replace
-        regex: (.+)
-        target_label: __metrics_path__
-      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-        action: replace
-        regex: ([^:]+)(?::\d+)?;(\d+)
-        replacement: $1:$2
-        target_label: __address__
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
-        action: replace
-        regex: (https?)
-        target_label: __scheme__
+      # Copy all pod labels from kubernetes as Prometheus metrics.
       - action: labelmap
         regex: __meta_kubernetes_pod_label_(.+)
-      - source_labels: [__meta_kubernetes_pod_name]
-        action: replace
-        target_label: podname
-      - source_labels: [__meta_kubernetes_pod_node_name]
-        action: replace
-        target_label: node
-      - source_labels: [__meta_kubernetes_namespace]
-        action: replace
+      - action: keep
+        regex: true
+        source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+      - action: replace
+        regex: (.+)
+        source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels: 
+        - __address__
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        target_label: __address__
+      - action: replace
+        regex: (https?)
+        source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+        target_label: __scheme__
+
+      # Add Kubernetes pod name as namespace.
+      - action: replace
+        source_labels: [__meta_kubernetes_namespace]
         target_label: namespace
-      - source_labels: [__meta_kubernetes_service_name]
-        action: replace
-        target_label: service
+
+      # Add Kubernetes pod name as pod.
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+
+      # Add Kubernetes pod name as instance.
+      - action: replace
+        source_labels: 
+        - __meta_kubernetes_pod_name
+        target_label: instance
+
+      # Add Kubernetes pod container name.
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_container_name]
+        target_label: container
+
+      # Add Kubernetes pod node name as node
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_node_name]
+        target_label: node
+
+    - job_name: node-exporter
+      kubernetes_sd_configs: 
+      - role: pod
+      relabel_configs: 
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - action: replace
+        regex: ([^:]+)(?::\d+)?
+        replacement: $1:9100
+        source_labels: [__address__]
+        target_label: __address__
+      - action: keep
+        regex: monitoring;node-exporter
+        source_labels: 
+        - __meta_kubernetes_namespace
+        - __meta_kubernetes_pod_label_k8s_app
+      - action: replace
+        source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_node_name]
+        target_label: instance
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_container_name]
+        target_label: container
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_node_name]
+        target_label: node
