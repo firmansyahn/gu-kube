@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-exporter
+  labels:
+    app.kubernetes.io/component: node-exporter
+    app.kubernetes.io/part-of: monitoring-system
+spec:
+  destination:
+    namespace: node-exporter
+    server: https://kubernetes.default.svc
+  source:
+    path: node-exporter
+    repoURL: 'https://github.com/samsara238/infra-test1.git'
+    targetRevision: HEAD
+  project: default
+  syncPolicy: {}

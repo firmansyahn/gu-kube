@@ -1,0 +1,16 @@
+apiVersion: k8s.nginx.org/v1alpha1
+kind: GlobalConfiguration 
+metadata:
+  name: nginx-configuration
+  namespace: nginx-ingress
+  labels:
+    app.kubernetes.io/component: nginx-ingress
+    app.kubernetes.io/part-of: ingress
+spec:
+  listeners:
+  - name: tcp-15922
+    port: 15922
+    protocol: TCP
+  - name: tcp-50000
+    port: 50000
+    protocol: TCP
