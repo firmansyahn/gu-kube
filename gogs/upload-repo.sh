@@ -37,3 +37,12 @@ git clone https://gogs.gogs.svc:3000/admingogs/infra.git /git/gogs-git
 git init /git/gogs-git
 git remote add origin https://admingogs:admin@gogs.gogs.svc:3000/admingogs/infra.git
 git add /git/gogs-git/* && git commit -a -m "Commit" && git push -u origin master
+
+git config --global user.email "hostmaster@jakwifi.id" && git config --global user.name "Hostmaster JakWiFi"
+git remote add origin https://github.com/jakwifi/oam.git
+git checkout -b main
+
+git pull https://github.com/jakwifi/oam.git main
+git add .
+git commit -a -m "Commit"
+git push -u origin main
