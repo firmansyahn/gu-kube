@@ -8,11 +8,11 @@ metadata:
     app.kubernetes.io/part-of: monitoring-system
 spec:
   secretName: grafana-tls
-  isCA: false
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
     name: selfsigned-issuer
+    #name: letsencrypt-prd
   privateKey:
     algorithm: ECDSA
     size: 256
@@ -27,11 +27,9 @@ spec:
     - Asgard
     provinces:
     - Yggdrasil
-   #streetAddresses:
-   #- Vigrid
-   #postalCodes:
-   #- "12000"
-   #serialNumber: "1234567890"
+   #streetAddresses: ["Vigrid"]
+   #postalCodes: ["12000"]
+   #serialNumber: ["1234567890"]
   dnsNames:
   - grafana
   - grafana.grafana
