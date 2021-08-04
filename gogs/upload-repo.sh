@@ -38,11 +38,28 @@ git init /git/gogs-git
 git remote add origin https://admingogs:admin@gogs.gogs.svc:3000/admingogs/infra.git
 git add /git/gogs-git/* && git commit -a -m "Commit" && git push -u origin master
 
-git config --global user.email "hostmaster@jakwifi.id" && git config --global user.name "Hostmaster JakWiFi"
-git remote add origin https://github.com/jakwifi/oam.git
+# Initial from blank repo
+git config user.email "hostmaster@jakwifi.id" && git config user.name "jakwifi"
+git init
+git remote add origin https://github.com/jakwifi/oam2.git
+    git remote set-url origin https://jakwifi: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@github.com/jakwifi/oam2.git
 git checkout -b main
+git add . -A && git commit -a -m "Commit" && git push -u origin main
+git checkout -b development
+git add . -A && git commit -a -m "Commit" && git push -u origin development
 
 git pull https://github.com/jakwifi/oam.git main
-git add .
+git add . -A
 git commit -a -m "Commit"
 git push -u origin main
+
+git fetch https://github.com/jakwifi/oam.git main
+git add . -A && git commit -a -m "Commit" && git push -u origin main
+
+
+git add . -A && git commit -a -m "Commit" && git push -u origin development
+
+git rm -rf --cached config/config.php
+
+
+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
