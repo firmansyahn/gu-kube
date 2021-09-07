@@ -1,0 +1,28 @@
+
+
+
+istioctl proxy-status
+
+NAME                                                   CDS        LDS        EDS        RDS          ISTIOD                      VERSION
+...
+phpmyadmin-7c4f47879d-kpwlf.phpmyadmin                 SYNCED     SYNCED     SYNCED     SYNCED       istiod-6c68579c55-s8pmk     1.11.2
+
+
+istioctl proxy-config cluster phpmyadmin-7c4f47879d-kpwlf.phpmyadmin --fqdn phpmyadmin-7c4f47879d-kpwlf.phpmyadmin.svc -o json
+
+
+istioctl proxy-config route istio-ingressgateway-694d8d7656-h2wsj -n istio-system -ojson
+[root@regulus-lin-k8s istio]# istioctl proxy-config route istio-ingressgateway-694d8d7656-h2wsj -n istio-system
+NAME          DOMAINS                     MATCH                  VIRTUAL SERVICE
+http.8080     pma.dxm.balitbanghub.id     /*                     phpmyadmin.phpmyadmin
+              *                           /healthz/ready*
+              *                           /stats/prometheus*
+
+
+
+istioctl x describe pod -n phpmyadmin phpmyadmin-6dbfd6b765-c6bq4
+
+
+
+
+curl -s -I -HHost:httpbin.example.com "http://$INGRESS_HOST:$INGRESS_PORT/headers"

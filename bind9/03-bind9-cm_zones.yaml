@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bind9-zones
+  namespace: bind9
+data:
+  custsuspend.db: |
+    $TTL 1h
+    @ SOA @ hostmaster.mediacloud.id. 997 12h 3h 1d 1h
+            ; Serial, Refresh, Retry, Expire, Neg. cache TTL
+
+    @       NS      @
+
+    @       A       172.16.20.13
+    *       A       172.16.20.13
+
+  empty.db: |
+    $TTL 3h
+    @ SOA @ nobody.localhost. 42 1d 12h 1w 3h
+            ; Serial, Refresh, Retry, Expire, Neg. cache TTL
+
+    @       NS      @
+
+    ; Silence a BIND warning
+    @       A       127.0.0.1
+
+  hotspot.db: |
+    $TTL 3h
+    @ SOA @ hostmaster.mediacloud.id. 42 1d 12h 1w 3h
+            ; Serial, Refresh, Retry, Expire, Neg. cache TTL
+
+    @       NS      @
+
+    ; Silence a BIND warning
+    @       A       172.16.240.1
+    @       AAAA    2407:6f80:0:19::1
+    *       A       172.16.240.1
+    *       AAAA    2407:6f80:0:19::1
+
+  google-cp-spoof.db: |
+    $TTL 3h
+    @ SOA @ hostmaster.mediacloud.id. 42 1d 12h 1w 3h
+            ; Serial, Refresh, Retry, Expire, Neg. cache TTL
+
+    @       NS      @
+
+    ; Silence a BIND warning
+    @       A       172.16.240.1
+    @       AAAA    2407:6f80:0:10::5
+
+

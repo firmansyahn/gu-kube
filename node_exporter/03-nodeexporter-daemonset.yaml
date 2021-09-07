@@ -4,6 +4,7 @@ metadata:
   name: node-exporter
   namespace: monitoring
   labels: &Labels
+    app: node-exporter
     app.kubernetes.io/component: node-exporter
     app.kubernetes.io/part-of: monitoring-system
     k8s-app: node-exporter

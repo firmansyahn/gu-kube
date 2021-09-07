@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bind9
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bind9-sa
+  namespace: bind9
+---

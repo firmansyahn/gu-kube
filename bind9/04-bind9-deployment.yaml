@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bind9
+  namespace: bind9
+  labels: &Labels
+    app: bind9
+    app.kubernetes.io/component: bind9
+    app.kubernetes.io/part-of: domain-system
+    k8s-app: bind9
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *Labels
+  template:
+    metadata:
+      labels: *Labels
+      annotations:
+        k8s.v1.cni.cncf.io/networks: '[{
+          "name": "dmz1-201",
+          "ips": [ "172.16.10.10" ],
+          "default-route": ["172.16.10.1"]
+        }]'
+    spec:
+      containers:
+      - name: bind9
+        image: internetsystemsconsortium/bind9:9.17
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 53
+          name: bind9-tcp
+          protocol: TCP
+        - containerPort: 53
+          name: bind9-udp
+          protocol: UDP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1000Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - name: config
+          mountPath: "/etc/bind/named.conf.options"
+          subPath: named.conf.options
+        - name: config
+          mountPath: "/etc/bind/named.conf.local"
+          subPath: named.conf.local
+        - name: config
+          mountPath: "/etc/bind/named.conf.default-zones"
+          subPath: named.conf.default-zones
+        - name: zones
+          mountPath: "/var/lib/bind/master"
+      volumes:
+      - name: config
+        configMap:
+          name: bind9-config
+          items:
+          - key: "named.conf.options"
+            path: "named.conf.options"
+          - key: "named.conf.local"
+            path: "named.conf.local"
+          - key: "named.conf.default-zones"
+            path: "named.conf.default-zones"
+      - name: zones
+        configMap:
+          name: bind9-zones
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bind9
+  namespace: bind9
+  labels:
+    #app.kubernetes.io/name: $APP_INSTANCE_NAME
+    app.kubernetes.io/component: bind9
+    app.kubernetes.io/part-of: domain-system
+    k8s-app: bind9
+spec:
+  selector:
+    k8s-app: bind9
+  ports:
+  - port: 53
+    protocol: TCP
+    targetPort: bind9-tcp
+  #externalTrafficPolicy: Local
+  sessionAffinity: ClientIP
+  #type: LoadBalancer
+---

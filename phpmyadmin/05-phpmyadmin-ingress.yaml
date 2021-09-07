@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: phpmyadmin
+  namespace: phpmyadmin
+  labels:
+    app.kubernetes.io/component: phpmyadmin
+    app.kubernetes.io/part-of: database
+  annotations:
+    #cert-manager.io/cluster-issuer: "letsencrypt-prd"
+    #cert-manager.io/cluster-issuer: "selfsigned-issuer
+    acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: phpmyadmin.phpmyadmin.svc.cluster.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: phpmyadmin
+            port:
+              number: 80
+---

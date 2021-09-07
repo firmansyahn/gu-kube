@@ -9,7 +9,6 @@ metadata:
     app.kubernetes.io/part-of: argocd
 spec:
   secretName: argocd-server-tls
-  isCA: false
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer

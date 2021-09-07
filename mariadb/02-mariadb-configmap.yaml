@@ -7,15 +7,37 @@ metadata:
     app.kubernetes.io/component: mariadb
     app.kubernetes.io/part-of: database
 data:
-  my.cnf: |
+  50-client.cnf: |
+    [client]
+    default-character-set = utf8mb4
+
+  50-server.cnf: |
     [mysqld]
     binlog_format = ROW
     expire_logs_days = 20
     general_log = 0
-    innodb_flush_log_at_trx_commit = 0
 
+    log_bin = /var/lib/mysql/mysql-bin
+    log_bin_index = /var/lib/mysql/mysql-bin.index
+    relay_log = /var/lib/mysql/relay-bin
+    relay_log_index = /var/lib/mysql/relay-bin.index
+
+    innodb_file_per_table = 1
+    innodb_flush_log_at_trx_commit = 0
+    
     character-set-server = utf8mb4
     collation-server = utf8mb4_unicode_ci
     default_storage_engine = InnoDB
     default_tmp_storage_engine = InnoDB
+
     lower_case_table_names = 0
+
+  60-galera.cnf: |
+    [galera]
+    #wsrep_on = ON
+    #wsrep_provider_options="gcache.size = 5G;"
+    #wsrep_cluster_name = "MariaDB Galera Cluster"
+    #wsrep_cluster_address = gcomm://
+
+    #innodb_autoinc_lock_mode = 2
+---

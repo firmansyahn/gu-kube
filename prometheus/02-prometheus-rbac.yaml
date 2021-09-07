@@ -19,7 +19,6 @@ rules:
   - configmaps
   verbs: ["get"]
 - apiGroups:
-  - extensions
   - networking.k8s.io
   resources:
   - ingresses

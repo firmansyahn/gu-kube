@@ -1,0 +1,9 @@
+spec:
+  template:
+    spec:
+      containers:
+        - name: cert-manager
+          ports:
+            - containerPort: 9402
+              name: http
+              protocol: TCP

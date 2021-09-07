@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpmyadmin
+  namespace: phpmyadmin
+  labels: &Labels
+    app: phpmyadmin
+    #app.kubernetes.io/name: $APP_INSTANCE_NAME
+    app.kubernetes.io/component: phpmyadmin
+    app.kubernetes.io/part-of: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *Labels
+  template:
+    metadata:
+      labels: *Labels
+    spec:
+      securityContext: {}
+      containers:
+      - name: phpmyadmin
+        image: phpmyadmin:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: phpmyadmin-http
+          protocol: TCP
+        env:
+        - name: PMA_PMADB
+          value: pmadb
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/phpmyadmin/config.user.inc.php
+          subPath: config.user.inc.php
+      volumes:
+      - name: config
+        configMap:
+          name: phpmyadmin-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpmyadmin
+  namespace: phpmyadmin
+  labels:
+    app: phpmyadmin
+    #app.kubernetes.io/name: $APP_INSTANCE_NAME
+    app.kubernetes.io/component: phpmyadmin
+    app.kubernetes.io/part-of: database
+spec:
+  selector:
+    app: phpmyadmin
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: phpmyadmin-http
+  #externalTrafficPolicy: Local
+  sessionAffinity: ClientIP
+  type: ClusterIP
+---

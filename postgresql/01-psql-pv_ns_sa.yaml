@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgresql
+  labels:
+    app: postgresql
+    type: local
+    app.kubernetes.io/component: postgresql
+    app.kubernetes.io/part-of: database
+spec:
+  storageClassName: local-hostpath
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: postgresql-data
+    namespace: postgresql
+  capacity:
+    storage: 5Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: "/data/postgresql"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: postgresql
+  labels:
+    app.kubernetes.io/component: postgresql
+    app.kubernetes.io/part-of: database
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: postgresql
+  namespace: postgresql
+  labels:
+    app.kubernetes.io/component: postgresql
+    app.kubernetes.io/part-of: database
+---

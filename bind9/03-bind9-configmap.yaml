@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bind9-config
+  namespace: bind9
+data:
+  named.conf.options: |
+    acl localnet { 172.16.0.0/16; 192.168.180.0/24; 2406:38c0::/32; };
+    acl custsuspend { 172.16.152.0/22; 2406:38c0:101:e000::/52; };
+    acl freewifi { 172.16.240.0/23; 2406:38c0:101:4e00::/64; };
+    acl bassuranet {
+        172.16.10.0/24;
+        172.16.18.0/24;
+        172.16.20.0/24;
+        2406:38c0:101::/48;
+    };
+
+    options {
+    //  listen-on port 53 { 127.0.0.1; 172.16.10.17; };
+    //  listen-on-v6 port 53 { ::1; };
+        directory           "/var/cache/bind";
+        dump-file           "/var/log/bind/cache_dump.db";
+        statistics-file     "/var/log/bind/named_stats.txt";
+        memstatistics-file  "/var/log/bind/named_mem_stats.txt";
+        secroots-file       "/var/cache/bind/named.secroots";
+        recursing-file      "/var/cache/bind/named.recursing";
+
+        zone-statistics yes;
+        allow-query { any; };
+
+        recursion yes;
+
+        auth-nxdomain no;
+
+        /* https://fedoraproject.org/wiki/Changes/CryptoPolicy */
+    //  include "/etc/crypto-policies/back-ends/bind.config";
+
+        forwarders {
+    //      d161.97.219.84   port 5353;      //ns1.opennic.glue
+    //      163.172.168.171 port 5353;      //ns4.opennic.glue      - OK
+            5.189.170.196 port 3074;        //ns2.or.us.dns.opennic.glue    - OK
+            5.189.170.196 port 1512;        //ns2.or.us.dns.opennic.glue    - OK
+            208.67.222.222  port 443;       //OpenDNS (port TCP/443, UDP/5353) - OK
+            208.67.220.220  port 443;       //OpenDNS (port TCP/443, UDP/5353) - OK
+    //      27.50.20.21;
+    //      27.50.30.21;
+        };
+        forward only;
+    };
+
+  named.conf.local: |
+    logging {
+        channel default_debug { file "/var/log/bind/default.log" versions 10 size 50m; severity dynamic; print-time yes; print-severity yes; print-category yes; };
+        channel client_file { file "/var/log/bind/client.log" versions 10 size 50m; severity dynamic; print-time yes; print-category yes; };
+        channel queries_file { file "/var/log/bind/queries.log" versions 10 size 50m; severity dynamic; print-time yes; print-category yes; };
+        channel resolver_file { file "/var/log/bind/resolver.log" versions 10 size 50m; severity dynamic; print-time yes; print-category yes; };
+        channel security_file { file "/var/log/bind/security.log" versions 10 size 50m; severity dynamic; print-time yes; print-category yes; };
+
+        category client { client_file; };
+        category queries { queries_file; };
+        category resolver { resolver_file; };
+        category security { security_file; };
+    };
+
+    view "custsuspend-view" { match-clients { custsuspend; };
+        recursion yes;
+        allow-query-cache { none; };
+
+        zone "." { type master; file "/var/lib/bind/master/custsuspend.db"; };
+        include "/etc/bind/zones.rfc1918";
+    };
+
+    view "freewifi-view" {
+        match-clients { freewifi; };
+        recursion yes;
+
+        zone "." { type hint; file "/usr/share/dns/root.hints"; };
+        zone "localhost" { type master; file "/etc/bind/db.local"; };
+        zone "127.in-addr.arpa" { type master; file "/etc/bind/db.127"; };
+        zone "0.in-addr.arpa" { type master; file "/etc/bind/db.0"; };
+        zone "255.in-addr.arpa" { type master; file "/etc/bind/db.255"; };
+
+        include "/etc/bind/zones.rfc1918";
+        include "/etc/bind/bind.keys";
+
+        zone "hs1.mediacloud.id" { type master; file "/var/lib/bind/master/hotspot.db"; };
+    //  zone "clients1.google.com" { type master; file "master/google-cp-spoof.db"; };
+    //  zone "clients3.google.com" { type master; file "master/google-cp-spoof.db"; };
+    //  zone "connectivitycheck.android.com" { type master; file "master/google-cp-spoof.db"; };
+    //  zone "connectivitycheck.gstatic.com" { type master; file "master/google-cp-spoof.db"; };
+    };
+
+    view "internal-view" {
+        match-clients { ::1; 127.0.0.1; localnet; };
+        recursion yes;
+
+        zone "." { type hint; file "/usr/share/dns/root.hints"; };
+        zone "localhost" { type master; file "/etc/bind/db.local"; };
+        zone "127.in-addr.arpa" { type master; file "/etc/bind/db.127"; };
+        zone "0.in-addr.arpa" { type master; file "/etc/bind/db.0"; };
+        zone "255.in-addr.arpa" { type master; file "/etc/bind/db.255"; };
+
+        include "/etc/bind/zones.rfc1918";
+        include "/etc/bind/bind.keys";
+    };
+
+    view "external-view" {
+        match-clients { any; };
+        match-destinations { any; };
+        recursion no;
+        allow-query-cache { none; };
+
+        zone "." { type hint; file "/usr/share/dns/root.hints"; };
+    };
+    
+  named.conf.default-zones: |
+    //dummy

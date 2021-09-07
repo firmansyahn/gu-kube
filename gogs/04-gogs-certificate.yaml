@@ -8,7 +8,6 @@ metadata:
     app.kubernetes.io/part-of: git
 spec:
   secretName: gogs-tls
-  isCA: false
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer

@@ -12,10 +12,18 @@ data:
       scrape_interval: 30s
 
     scrape_configs:
-    #- job_name: 'prometheus'
-       #scrape_interval: 5s
-       #static_configs:
-        #- targets: ['localhost:9090']
+    - job_name: 'prometheus'
+      scrape_interval: 15m
+      static_configs:
+      - targets: ['localhost:9090']
+    - job_name: 'grafana'
+      scrape_interval: 60s
+      static_configs:
+      - targets: ['grafana.grafana.svc:3000']
+    - job_name: 'crio'
+      scrape_interval: 60s
+      static_configs:
+      - targets: ['172.31.251.8:9537']
 
     # This rules will auto-discover kube-dns. Only if Prometheus annotations is "true"
     - job_name: kubernetes-service-endpoints

@@ -1,0 +1,36 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: phpmyadmin-gw
+  namespace: phpmyadmin
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      number: 80
+      name: phpmyadmin-http
+      protocol: TCP
+    hosts:
+    - pma.dxm.balitbanghub.id
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: phpmyadmin
+  namespace: phpmyadmin
+spec:
+  hosts:
+  - pma.dxm.balitbanghub.id
+  gateways:
+  - phpmyadmin-gw
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: phpmyadmin # pods service name
+        port:
+          number: 80
+---

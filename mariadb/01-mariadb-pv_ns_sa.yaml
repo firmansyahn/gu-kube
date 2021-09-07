@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mariadb
+  name: mariadb-0
   labels:
-    app: mariadb
+    podindex: "0"
     type: local
     app.kubernetes.io/component: mariadb
     app.kubernetes.io/part-of: database
@@ -11,14 +11,59 @@ spec:
   storageClassName: local-hostpath
   persistentVolumeReclaimPolicy: Retain
   claimRef:
-    name: mariadb-data
+    name: data-mariadb-0
     namespace: mariadb
   capacity:
-    storage: 5Gi
+    storage: 10Gi
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: "/data/mariadb"
+    path: "/data/mariadb-0"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mariadb-1
+  labels:
+    app: mariadb
+    podindex: "1"
+    type: local
+    app.kubernetes.io/component: mariadb
+    app.kubernetes.io/part-of: database
+spec:
+  storageClassName: local-hostpath
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: data-mariadb-1
+    namespace: mariadb
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: "/data/mariadb-1"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mariadb-2
+  labels:
+    podindex: "2"
+    type: local
+    app.kubernetes.io/component: mariadb
+    app.kubernetes.io/part-of: database
+spec:
+  storageClassName: local-hostpath
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: data-mariadb-2
+    namespace: mariadb
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: "/data/mariadb-2"
 ---
 apiVersion: v1
 kind: Namespace

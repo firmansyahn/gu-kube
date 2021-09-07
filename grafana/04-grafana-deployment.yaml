@@ -26,6 +26,7 @@ metadata:
     app.kubernetes.io/part-of: monitoring-system
     k8s-app: grafana
 spec:
+  replicas: 1
   selector:
     matchLabels: *Labels
   template:
@@ -132,5 +133,5 @@ spec:
     targetPort: grafana-http
   #externalTrafficPolicy: Local
   sessionAffinity: ClientIP
-  #type: LoadBalancer
+  type: ClusterIP
 ---

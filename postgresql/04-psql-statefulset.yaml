@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: prometheus-data
-  namespace: prometheus
+  name: postgresql-data
+  namespace: postgresql
   labels:
-    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/component: postgresql
     app.kubernetes.io/part-of: monitoring-system
 spec:
   accessModes:
@@ -17,16 +17,15 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: prometheus
-  namespace: prometheus
+  name: postgresql
+  namespace: postgresql
   labels: &Labels
-    app: prometheus
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
-    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/component: postgresql
     app.kubernetes.io/part-of: monitoring-system
-    k8s-app: prometheus
+    k8s-app: postgresql
 spec:
-  serviceName: prometheus
+  serviceName: postgresql
   replicas: 1
   podManagementPolicy: "Parallel"
   updateStrategy:
@@ -39,20 +38,14 @@ spec:
     spec:
       securityContext:
         fsGroup: 1001001
-      serviceAccountName: prometheus
+      serviceAccountName: postgresql
       containers:
-      - name: prometheus-server
-        image: prom/prometheus:latest
+      - name: postgresql-server
+        image: postgres:13
         imagePullPolicy: "IfNotPresent"
-        args:
-        - --config.file=/prometheus/config/prometheus.yaml
-        - --storage.tsdb.path=/prometheus/data
-        - --web.console.libraries=/usr/share/prometheus/console_libraries
-        - --web.console.templates=/usr/share/prometheus/consoles
-        - --web.enable-lifecycle
         ports:
-        - name: http-prometheus
-          containerPort: 9090
+        - name: postgresql
+          containerPort: 5432
         readinessProbe:
           httpGet:
             path: /-/ready
@@ -72,18 +65,18 @@ spec:
             memory: 1000Mi
         volumeMounts:
         - name: config-file
-          mountPath: /prometheus/config
-        - name: storage-tsdb
-          mountPath: /prometheus/data
+          mountPath: /postgresql/config
+        - name: storage-data
+          mountPath: /postgresql/data
           subPath: ""
       terminationGracePeriodSeconds: 300
       volumes:
       - name: config-file
         configMap:
-          name: prometheus-config
-      - name: storage-tsdb
+          name: postgresql-config
+      - name: storage-data
         persistentVolumeClaim:
-          claimName: prometheus-data
+          claimName: postgresql-data
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -92,27 +85,26 @@ spec:
               - key: k8s-app
                 operator: In
                 values:
-                - prometheus
+                - postgresql
             topologyKey: "kubernetes.io/hostname"
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: prometheus
-  namespace: prometheus
+  name: postgresql
+  namespace: postgresql
   labels:
-    app: prometheus
-    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/component: postgresql
     app.kubernetes.io/part-of: monitoring-system
-    k8s-app: prometheus
+    k8s-app: postgresql
 spec:
   clusterIP: None
   selector:
     #Should same with StatefullSet spec.selector
-    k8s-app: prometheus
+    k8s-app: postgresql
   ports:
   - protocol: TCP
     port: 9090
-    targetPort: http-prometheus
+    targetPort: http-postgresql
   sessionAffinity: ClientIP
 ---
