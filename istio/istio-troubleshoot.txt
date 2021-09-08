@@ -1,6 +1,20 @@
 
 
 
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
+export TCP_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="tcp")].port}')
+
+echo 'INGRESS_HOST : ' $INGRESS_HOST
+echo 'INGRESS_PORT : ' $INGRESS_PORT
+echo 'SECURE_INGRESS_PORT : ' $SECURE_INGRESS_PORT
+echo 'TCP_INGRESS_PORT : ' $TCP_INGRESS_PORT
+----------------------------------------------------------------
+
+kubectl label namespace phpmyadmin istio-injection=enabled --overwrite
+kubectl get namespace -L istio-injection
+
 istioctl proxy-status
 
 NAME                                                   CDS        LDS        EDS        RDS          ISTIOD                      VERSION
@@ -8,10 +22,10 @@ NAME                                                   CDS        LDS        EDS
 phpmyadmin-7c4f47879d-kpwlf.phpmyadmin                 SYNCED     SYNCED     SYNCED     SYNCED       istiod-6c68579c55-s8pmk     1.11.2
 
 
-istioctl proxy-config cluster phpmyadmin-7c4f47879d-kpwlf.phpmyadmin --fqdn phpmyadmin-7c4f47879d-kpwlf.phpmyadmin.svc -o json
+istioctl proxy-config cluster phpmyadmin-74f9d5dff4-bh7wx.phpmyadmin --fqdn phpmyadmin-74f9d5dff4-bh7wx.phpmyadmin.svc -o json
 
 
-istioctl proxy-config route istio-ingressgateway-5d76fcbfc9-nqst8 -n istio-system -ojson
+istioctl proxy-config route istio-ingressgateway-694d8d7656-9b986 -n istio-system -ojson
 [root@regulus-lin-k8s istio]# istioctl proxy-config route istio-ingressgateway-694d8d7656-h2wsj -n istio-system
 NAME          DOMAINS                     MATCH                  VIRTUAL SERVICE
 http.8080     pma.dxm.balitbanghub.id     /*                     phpmyadmin.phpmyadmin
@@ -60,3 +74,8 @@ istioctl proxy-config listeners -n httpbin httpbin-74fb669cc6-lxhrn --port 15001
 ----------------------------------------------------------------
 
 curl -s -I -HHost:httpbin.example.com "http://$INGRESS_HOST:$INGRESS_PORT/headers"
+
+
+
+
+k exec -n istio-system istiod-6d9c4fdd6b-gg2nq -- curl localhost:8080/debug/configz

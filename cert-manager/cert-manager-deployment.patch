@@ -5,5 +5,5 @@ spec:
         - name: cert-manager
           ports:
             - containerPort: 9402
-              name: http
+              name: http-prometheus
               protocol: TCP

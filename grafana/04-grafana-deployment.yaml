@@ -44,7 +44,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
-          name: grafana-http
+          name: http-grafana
           protocol: TCP
         readinessProbe:
           failureThreshold: 3
@@ -120,17 +120,20 @@ metadata:
   name: grafana
   namespace: grafana
   labels:
+    app: grafana
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: grafana
     app.kubernetes.io/part-of: monitoring-system
     k8s-app: grafana
 spec:
   selector:
-    k8s-app: grafana
+    app: grafana
+    # k8s-app: grafana
   ports:
+  - name: http-grafana
   - port: 3000
     protocol: TCP
-    targetPort: grafana-http
+    targetPort: http-grafana
   #externalTrafficPolicy: Local
   sessionAffinity: ClientIP
   type: ClusterIP

@@ -1,0 +1,19 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  components:
+    cni:
+      enabled: true
+  meshConfig:
+    accessLogFile: /dev/stdout
+  profile: default
+  values:
+    sidecarInjectorWebhook:
+      injectedAnnotations:
+        k8s.v1.cni.cncf.io/networks: istio-cni
+    cni:
+      cniBinDir: /opt/cni/bin
+      cniConfDir: /etc/cni/multus/net.d
+      cniConfFileName: istio-cni.conf
+      chained: false
+---

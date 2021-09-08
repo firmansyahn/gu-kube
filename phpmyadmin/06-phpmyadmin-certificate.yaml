@@ -1,0 +1,41 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: phpmyadmin-certs
+  namespace: phpmyadmin
+  labels:
+    app.kubernetes.io/component: phpmyadmin
+    app.kubernetes.io/part-of: database
+spec:
+  secretName: phpmyadmin-tls
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned-issuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  subject:
+    countries:
+    - ID
+    organizations:
+    - Valkyrie
+    organizationalUnits:
+    - "phpMyAdmin"
+    localities:
+    - Asgard
+    provinces:
+    - Yggdrasil
+   #streetAddresses:
+   #- Vigrid
+   #postalCodes:
+   #- "12000"
+   #serialNumber: "1234567890"
+  dnsNames:
+  - phpmyadmin
+  - phpmyadmin.phpmyadmin
+  - phpmyadmin.phpmyadmin.svc
+  - phpmyadmin.phpmyadmin.svc.cluster.local
+  - phpmyadmin.phpmyadmin.svc.nebula.dxm.balitbanghub.id
+  - pma.dxm.balitbanghub.id
+---

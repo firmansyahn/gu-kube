@@ -1,45 +1,45 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: phpmyadmin-gw
-  namespace: phpmyadmin
+  name: jenkins-gw
+  namespace: jenkins
 spec:
   selector:
     istio: ingressgateway # use Istio default gateway implementation
   servers:
   - port:
       number: 80
-      name: http-phpmyadmin
+      name: http-jenkins
       protocol: HTTP
     hosts:
-    - pma.dxm.balitbanghub.id
+    - jenkins.dxm.balitbanghub.id
   - port:
       number: 443
-      name: https-phpmyadmin
+      name: https-jenkins
       protocol: HTTPS
     tls:
       mode: SIMPLE
-      credentialName: phpmyadmin-tls
+      credentialName: jenkins-tls
     hosts:
-    - pma.dxm.balitbanghub.id
+    - jenkins.dxm.balitbanghub.id
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: phpmyadmin
-  namespace: phpmyadmin
+  name: jenkins
+  namespace: jenkins
 spec:
   hosts:
-  - pma.dxm.balitbanghub.id
+  - jenkins.dxm.balitbanghub.id
   gateways:
-  - phpmyadmin-gw
+  - jenkins-gw
   http:
   - match:
     - uri:
         prefix: /
     route:
     - destination:
-        host: phpmyadmin # pods service name
+        host: jenkins # pods service name
         port:
-          number: 80
+          number: 8080
 ---
