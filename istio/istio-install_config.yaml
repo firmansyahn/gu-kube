@@ -4,13 +4,19 @@ spec:
   components:
     cni:
       enabled: true
+    ingressGateways:
+    - name: istio-ingressgateway
+      enabled: true
+      k8s:
+        serviceAnnotations:
+          metallb.universe.tf/address-pool: istio-ingress-gateway
   meshConfig:
     accessLogFile: /dev/stdout
   profile: default
   values:
     sidecarInjectorWebhook:
       injectedAnnotations:
-        k8s.v1.cni.cncf.io/networks: istio-cni
+        k8s.v1.cni.cncf.io/networks: kube-public/istio-cni
     cni:
       cniBinDir: /opt/cni/bin
       cniConfDir: /etc/cni/multus/net.d

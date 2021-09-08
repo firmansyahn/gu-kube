@@ -7,7 +7,6 @@ metadata:
     app.kubernetes.io/part-of: ci-cd
     istio-injection: enabled
 ---
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
