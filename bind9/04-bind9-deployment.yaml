@@ -7,7 +7,6 @@ metadata:
     app: bind9
     app.kubernetes.io/component: bind9
     app.kubernetes.io/part-of: domain-system
-    k8s-app: bind9
 spec:
   replicas: 1
   selector:
@@ -73,17 +72,22 @@ metadata:
   name: bind9
   namespace: bind9
   labels:
+    app: bind9
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: bind9
     app.kubernetes.io/part-of: domain-system
-    k8s-app: bind9
 spec:
   selector:
-    k8s-app: bind9
+    app: bind9
   ports:
-  - port: 53
+  - name: tcp-bind9
+    port: 53
     protocol: TCP
-    targetPort: bind9-tcp
+    targetPort: 53
+  - name: udp-bind9
+    port: 53
+    protocol: UDP
+    targetPort: 53
   #externalTrafficPolicy: Local
   sessionAffinity: ClientIP
   #type: LoadBalancer
