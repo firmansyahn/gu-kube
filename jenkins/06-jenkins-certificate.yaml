@@ -1,0 +1,38 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: jenkins-certs
+  namespace: jenkins
+  labels:
+    app.kubernetes.io/component: jenkins
+    app.kubernetes.io/part-of: ci-cd
+spec:
+  secretName: jenkins-tls
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned-issuer
+    #name: letsencrypt-prd
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  subject:
+    countries:
+    - ID
+    organizations:
+    - Valkyrie
+    organizationalUnits:
+    - "Jenkins"
+    localities:
+    - Asgard
+    provinces:
+    - Yggdrasil
+   #streetAddresses: ["Vigrid"]
+   #postalCodes: ["12000"]
+   #serialNumber: ["1234567890"]
+  dnsNames:
+  - jenkins
+  - jenkins.jenkins
+  - jenkins.jenkins.svc
+  - jenkins.jenkins.svc.cluster.local
+---

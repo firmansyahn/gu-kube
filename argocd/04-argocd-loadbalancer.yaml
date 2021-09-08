@@ -7,10 +7,10 @@ spec:
   externalTrafficPolicy: Local
   type: LoadBalancer
   ports:
-  - port: 443
-    targetPort: 443
+  - name: https
+    port: 443
     protocol: TCP
-    name: https
+    targetPort: 443
   selector:
     app: nginx-ingress
 ---

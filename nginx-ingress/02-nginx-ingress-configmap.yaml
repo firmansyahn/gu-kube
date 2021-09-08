@@ -11,5 +11,4 @@ data:
   proxy-send-timeout: "60s"
   server-tokens: "off"
   worker-cpu-affinity: "auto"
-
 ---

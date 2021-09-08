@@ -1,26 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
+  labels: &Labels
     app: jenkins
-    component: ci-cd
+    app.kubernetes.io/component: jenkins
+    app.kubernetes.io/part-of: ci-cd
   name: jenkins
   namespace: jenkins
 spec:
   replicas: 1
   selector:
-    matchLabels:
-      app: jenkins
+    matchLabels: *Labels
   template:
     metadata:
-      labels:
-        app: jenkins
-        managed-by: moratelindo-product-dept
+      labels: *Labels
     spec:
       securityContext:
         #runAsUser: 993
         #runAsGroup: 988
-        fsGroup: 1002
+        fsGroup: 1001006
         fsGroupChangePolicy: "OnRootMismatch"
         #supplementalGroups: [1002]
       serviceAccountName: jenkins-sa
@@ -31,9 +29,9 @@ spec:
         #image: jenkins/jenkins:lts-jdk11
         imagePullPolicy: Always
         ports:
-        - name: http-port
+        - name: http-ui
           containerPort: 8080
-        - name: jnlp-port
+        - name: tcp-jnlp
           containerPort: 50000
         readinessProbe:
           httpGet:
@@ -51,7 +49,7 @@ spec:
       volumes:
       - name: jenkins-home
         persistentVolumeClaim:
-          claimName: jenkins-pvc
+          claimName: data-jenkins
 ---
 apiVersion: v1
 kind: Service
@@ -64,13 +62,13 @@ spec:
   selector:
     app: jenkins
   ports:
-  - name: jenkins-ui
-    protocol: TCP
+  - name: http-ui
     port: 8080
-    targetPort: 8080
-  - name: jenkins-jnlp
     protocol: TCP
+    targetPort: 8080
+  - name: tcp-jnlp
     port: 50000
+    protocol: TCP
     targetPort: 50000
   #ExternalTrafficPolicy can only be set on NodePort and LoadBalancer service
   #externalTrafficPolicy: Local
@@ -78,24 +76,3 @@ spec:
   #loadBalancerIP
   #type: NodePort
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: jenkins-ingress
-  namespace: jenkins
-  annotations:
-    nginx.org/client-max-body-size: 100m
-    nginx.org/server-tokens: "false"
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: jenkins.nebula.moratel.id
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: jenkins
-            port:
-              number: 8080

@@ -1,0 +1,8 @@
+1001001 prometheus
+1001002 grafana
+1001003 gogs
+1001004 mariadb
+1001005 postgresql
+1001006 jenkins
+1001007 minio
+
