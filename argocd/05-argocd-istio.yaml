@@ -1,0 +1,54 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: argocd-gw
+  namespace: argocd
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      number: 80
+      name: http-argocd
+      protocol: HTTP
+    hosts:
+    - argocd.app.cluster.local
+  - port:
+      number: 443
+      name: https-argocd
+      protocol: HTTPS
+    tls:
+      mode: PASSTHROUGH
+    hosts:
+    - argocd.app.cluster.local
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  hosts:
+  - argocd.app.cluster.local
+  gateways:
+  - argocd-gw
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: argocd-server.argocd.svc.cluster.local
+        port:
+          number: 80
+  tls:
+  - match:
+    - port: 443
+      sniHosts:
+      - argocd.app.cluster.local
+    route:
+    - destination:
+        host: argocd-server.argocd.svc.cluster.local
+        port:
+          number: 443
+---

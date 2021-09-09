@@ -1,5 +1,8 @@
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
+metadata:
+  name: istio-default-controlplane
+  namespace: istio-system
 spec:
   components:
     cni:
@@ -9,7 +12,21 @@ spec:
       enabled: true
       k8s:
         serviceAnnotations:
-          metallb.universe.tf/address-pool: istio-ingress-gateway
+          metallb.universe.tf/address-pool: istio-ingress-default
+    - name: istio-ingressgateway-stg
+      enabled: true
+      k8s:
+        serviceAnnotations:
+          metallb.universe.tf/address-pool: istio-ingress-stg
+      label:
+        istio: istio-ingressgateway-stg
+    - name: istio-ingressgateway-prd
+      enabled: true
+      k8s:
+        serviceAnnotations:
+          metallb.universe.tf/address-pool: istio-ingress-prd
+      label:
+        istio: istio-ingressgateway-prd
   meshConfig:
     accessLogFile: /dev/stdout
   profile: default

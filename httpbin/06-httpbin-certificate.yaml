@@ -32,8 +32,6 @@ spec:
    #- "12000"
    #serialNumber: "1234567890"
   dnsNames:
-  - httpbin
-  - httpbin.httpbin
   - httpbin.httpbin.svc
   - httpbin.httpbin.svc.cluster.local
   - httpbin.app.cluster.local

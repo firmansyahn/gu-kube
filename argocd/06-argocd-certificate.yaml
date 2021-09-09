@@ -37,4 +37,5 @@ spec:
   - argocd-server.argocd
   - argocd-server.argocd.svc
   - argocd-server.argocd.svc.cluster.local
+  - argocd.app.cluster.local
 ---

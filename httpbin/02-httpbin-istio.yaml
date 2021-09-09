@@ -5,7 +5,7 @@ metadata:
   namespace: httpbin
 spec:
   selector:
-    istio: ingressgateway
+    istio: istio-ingressgateway-stg
   servers:
   - port:
       number: 80

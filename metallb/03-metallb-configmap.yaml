@@ -15,9 +15,19 @@ data:
       addresses:
       - NGINX_INGRESS_ADDRESS
       auto-assign: false
-    - name: istio-ingress-gateway
+    - name: istio-ingress-default
       protocol: layer2
       addresses:
-      - ISTIO_INGRESS_ADDRESS
+      - ISTIO_INGRESS_DEFAULT_ADDRESS
+      auto-assign: false
+    - name: istio-ingress-stg
+      protocol: layer2
+      addresses:
+      - ISTIO_INGRESS_STG_ADDRESS
+      auto-assign: false
+    - name: istio-ingress-prd
+      protocol: layer2
+      addresses:
+      - ISTIO_INGRESS_PRD_ADDRESS
       auto-assign: false
 ---
