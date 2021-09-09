@@ -17,8 +17,8 @@ spec:
     matchLabels: *Labels
   template:
     metadata:
-      labels: *Labels
       annotations: *Annotations
+      labels: *Labels
     spec:
       containers:
       - args:
@@ -28,10 +28,10 @@ spec:
         - --no-collector.wifi
         - --no-collector.hwmon
         - --collector.cpu.info
-        #- --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+|var/lib/containers/storage/.+|run/containers/storage/.+)($|/)
+       #- --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+|var/lib/containers/storage/.+|run/containers/storage/.+)($|/)
         - --collector.filesystem.mount-points-exclude="^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)"
         - --collector.netclass.ignored-devices="^(veth.*|cali.*)$"
-        #- --web.config="/etc/config/web.yml"
+       #- --web.config="/etc/config/web.yml"
         name: node-exporter
         image: prom/node-exporter
         ports:
@@ -87,7 +87,8 @@ spec:
   selector:
     k8s-app: node-exporter
   ports:
-  - port: 9100
+  - name: http-node-exporter
+    port: 9100
     protocol: TCP
     targetPort: 9100
   sessionAffinity: ClientIP

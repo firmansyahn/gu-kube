@@ -65,20 +65,3 @@ spec:
   hostPath:
     path: "/data/mariadb-2"
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: mariadb
-  labels:
-    app.kubernetes.io/component: mariadb
-    app.kubernetes.io/part-of: database
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: mariadb
-  namespace: mariadb
-  labels:
-    app.kubernetes.io/component: mariadb
-    app.kubernetes.io/part-of: database
----
