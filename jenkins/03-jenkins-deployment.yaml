@@ -12,6 +12,8 @@ spec:
   selector:
     matchLabels: *Labels
   template:
+    annotations:
+      sidecar.istio.io/inject: "true"
     metadata:
       labels: *Labels
     spec:
@@ -58,6 +60,8 @@ metadata:
   namespace: jenkins
   labels:
     app: jenkins
+    app.kubernetes.io/component: jenkins
+    app.kubernetes.io/part-of: ci-cd
 spec:
   selector:
     app: jenkins

@@ -5,5 +5,4 @@ metadata:
   labels:
     app.kubernetes.io/component: phpmyadmin
     app.kubernetes.io/part-of: database
-    istio-injection: enabled
 ---

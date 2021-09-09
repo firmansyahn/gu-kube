@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - METALLB_ADDRESS_RANGE
+    - name: nginx-ingress-controller
+      protocol: layer2
+      addresses:
+      - NGINX_INGRESS_ADDRESS
+      auto-assign: false
+    - name: istio-ingress-gateway
+      protocol: layer2
+      addresses:
+      - ISTIO_INGRESS_ADDRESS
+      auto-assign: false
+---

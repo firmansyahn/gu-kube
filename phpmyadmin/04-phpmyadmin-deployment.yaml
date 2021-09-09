@@ -13,6 +13,8 @@ spec:
   selector:
     matchLabels: *Labels
   template:
+    annotations:
+      sidecar.istio.io/inject: "true"
     metadata:
       labels: *Labels
     spec:
@@ -23,7 +25,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
-          name: phpmyadmin-http
+          name: http-phpmyadmin
           protocol: TCP
         env:
         - name: PMA_PMADB
@@ -55,9 +57,10 @@ spec:
   selector:
     app: phpmyadmin
   ports:
-  - port: 80
+  - name: http-ui
+    port: 80
     protocol: TCP
-    targetPort: phpmyadmin-http
+    targetPort: 80
   #externalTrafficPolicy: Local
   sessionAffinity: ClientIP
   type: ClusterIP

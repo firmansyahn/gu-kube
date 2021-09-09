@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: phpmyadmin-certs
-  namespace: phpmyadmin
+  namespace: istio-system
   labels:
     app.kubernetes.io/component: phpmyadmin
     app.kubernetes.io/part-of: database
@@ -36,6 +36,5 @@ spec:
   - phpmyadmin.phpmyadmin
   - phpmyadmin.phpmyadmin.svc
   - phpmyadmin.phpmyadmin.svc.cluster.local
-  - phpmyadmin.phpmyadmin.svc.nebula.dxm.balitbanghub.id
-  - pma.dxm.balitbanghub.id
+  - phpmyadmin.app.cluster.local
 ---

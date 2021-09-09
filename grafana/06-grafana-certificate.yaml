@@ -35,4 +35,5 @@ spec:
   - grafana.grafana
   - grafana.grafana.svc
   - grafana.grafana.svc.cluster.local
+  - grafana.app.cluster.local
 ---

@@ -13,7 +13,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: phpmyadmin.phpmyadmin.svc.cluster.local
+  - host: phpmyadmin.app.cluster.local
     http:
       paths:
       - path: /

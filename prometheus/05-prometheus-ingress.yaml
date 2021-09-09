@@ -10,10 +10,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - prometheus.prometheus.svc.cluster.local
+    - prometheus.apps.cluster.local
     secretName: prometheus-tls
   rules:
-  - host: prometheus.prometheus.svc.cluster.local
+  - host: prometheus.apps.cluster.local
     http:
       paths:
       - path: /

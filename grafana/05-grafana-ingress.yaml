@@ -14,10 +14,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - grafana.grafana.svc
+    - grafana.app.cluster.local
     secretName: grafana-tls
   rules:
-  - host: grafana.grafana.svc.cluster.local
+  - host: grafana.app.cluster.local
     http:
       paths:
       - path: /

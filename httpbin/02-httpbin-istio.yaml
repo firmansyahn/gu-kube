@@ -12,7 +12,16 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "*"
+    - "httpbin.app.cluster.local"
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: httpbin-tls
+    hosts:
+    - "httpbin.app.cluster.local"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -21,7 +30,7 @@ metadata:
   namespace: httpbin
 spec:
   hosts:
-  - "*"
+  - "httpbin.app.cluster.local"
   gateways:
   - httpbin-gateway
   http:

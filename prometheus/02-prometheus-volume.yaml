@@ -11,7 +11,7 @@ spec:
   storageClassName: local-hostpath
   persistentVolumeReclaimPolicy: Retain
   claimRef:
-    name: prometheus-data
+    name: data-prometheus
     namespace: prometheus
   capacity:
     storage: 10Gi
@@ -21,19 +21,18 @@ spec:
     path: "/data/prometheus"
 ---
 apiVersion: v1
-kind: Namespace
+kind: PersistentVolumeClaim
 metadata:
-  name: prometheus
-  labels:
-    app.kubernetes.io/component: prometheus
-    app.kubernetes.io/part-of: monitoring-system
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: prometheus
+  name: data-prometheus
   namespace: prometheus
   labels:
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/part-of: monitoring-system
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-hostpath
 ---

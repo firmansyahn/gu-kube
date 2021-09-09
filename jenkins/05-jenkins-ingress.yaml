@@ -14,10 +14,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - jenkins.jenkins.svc.cluster.local
+    - jenkins.app.cluster.local
     secretName: jenkins-tls
   rules:
-  - host: jenkins.jenkins.svc.cluster.local
+  - host: jenkins.app.cluster.local
     http:
       paths:
       - path: /

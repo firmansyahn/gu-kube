@@ -12,7 +12,7 @@ spec:
       name: http-jenkins
       protocol: HTTP
     hosts:
-    - jenkins.dxm.balitbanghub.id
+    - jenkins.app.cluster.local
   - port:
       number: 443
       name: https-jenkins
@@ -21,7 +21,7 @@ spec:
       mode: SIMPLE
       credentialName: jenkins-tls
     hosts:
-    - jenkins.dxm.balitbanghub.id
+    - jenkins.app.cluster.local
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -30,7 +30,7 @@ metadata:
   namespace: jenkins
 spec:
   hosts:
-  - jenkins.dxm.balitbanghub.id
+  - jenkins.app.cluster.local
   gateways:
   - jenkins-gw
   http:

@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: jenkins-certs
-  namespace: jenkins
+  namespace: istio-system
   labels:
     app.kubernetes.io/component: jenkins
     app.kubernetes.io/part-of: ci-cd
@@ -35,4 +35,5 @@ spec:
   - jenkins.jenkins
   - jenkins.jenkins.svc
   - jenkins.jenkins.svc.cluster.local
+  - jenkins.app.cluster.local
 ---

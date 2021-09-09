@@ -11,7 +11,7 @@ spec:
   storageClassName: local-hostpath
   persistentVolumeReclaimPolicy: Retain
   claimRef:
-    name: grafana-data
+    name: data-grafana
     namespace: grafana
   capacity:
     storage: 5Gi
@@ -21,20 +21,18 @@ spec:
     path: "/data/grafana"
 ---
 apiVersion: v1
-kind: Namespace
+kind: PersistentVolumeClaim
 metadata:
-  name: grafana
-  labels:
-    app.kubernetes.io/component: grafana
-    app.kubernetes.io/part-of: monitoring-system
-    istio-injection: enabled
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: grafana
+  name: data-grafana
   namespace: grafana
   labels:
     app.kubernetes.io/component: grafana
     app.kubernetes.io/part-of: monitoring-system
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: local-hostpath
 ---

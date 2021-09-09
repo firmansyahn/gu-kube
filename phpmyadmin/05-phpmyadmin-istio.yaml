@@ -12,7 +12,7 @@ spec:
       name: http-phpmyadmin
       protocol: HTTP
     hosts:
-    - pma.dxm.balitbanghub.id
+    - pma.app.cluster.local
   - port:
       number: 443
       name: https-phpmyadmin
@@ -21,7 +21,7 @@ spec:
       mode: SIMPLE
       credentialName: phpmyadmin-tls
     hosts:
-    - pma.dxm.balitbanghub.id
+    - pma.app.cluster.local
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -30,7 +30,7 @@ metadata:
   namespace: phpmyadmin
 spec:
   hosts:
-  - pma.dxm.balitbanghub.id
+  - pma.app.cluster.local
   gateways:
   - phpmyadmin-gw
   http:
