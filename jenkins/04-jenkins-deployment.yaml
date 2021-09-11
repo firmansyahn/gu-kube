@@ -74,9 +74,4 @@ spec:
     port: 50000
     protocol: TCP
     targetPort: 50000
-  #ExternalTrafficPolicy can only be set on NodePort and LoadBalancer service
-  #externalTrafficPolicy: Local
-  #clusterIP: 172.24.24.51
-  #loadBalancerIP
-  #type: NodePort
 ---
