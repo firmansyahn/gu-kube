@@ -1,0 +1,45 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: argocd-gw
+  namespace: argocd
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      number: 80
+      name: http-argocd
+      protocol: HTTP
+    hosts:
+    - stronghold.dxm.mci.net.id
+  - port:
+      number: 443
+      name: https-argocd
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: argocd-tls
+    hosts:
+    - stronghold.dxm.mci.net.id
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  hosts:
+  - stronghold.dxm.mci.net.id
+  gateways:
+  - argocd-gw
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: argocd # pods service name
+        port:
+          number: 8080
+---
