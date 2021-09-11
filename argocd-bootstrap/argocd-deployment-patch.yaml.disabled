@@ -1,0 +1,13 @@
+# we enable insecure mode (accept http) for ArgoCD as we use mTLS in Istio and TLS in TLS does not make too much sense
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-server
+spec:
+  template:
+    spec:
+      containers:
+        - name: argocd-server
+          command:
+            - argocd-server
+            - --insecure
