@@ -5,4 +5,5 @@
 1001005 postgresql
 1001006 jenkins
 1001007 minio
+1001008 portainer
 

@@ -1,45 +1,45 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: argocd-gw
-  namespace: argocd
+  name: portainer-gw
+  namespace: portainer
 spec:
   selector:
     istio: ingressgateway # use Istio default gateway implementation
   servers:
   - port:
       number: 80
-      name: http-argocd
+      name: http-portainer
       protocol: HTTP
     hosts:
-    - stronghold.dxm.mci.net.id
+    - "portainer.app.cluster.local"
   - port:
       number: 443
-      name: https-argocd
+      name: https-portainer
       protocol: HTTPS
     tls:
       mode: SIMPLE
-      credentialName: argocd-tls
+      credentialName: portainer-tls
     hosts:
-    - stronghold.dxm.mci.net.id
+    - "portainer.app.cluster.local"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: argocd
-  namespace: argocd
+  name: portainer
+  namespace: portainer
 spec:
   hosts:
-  - stronghold.dxm.mci.net.id
+  - "portainer.app.cluster.local"
   gateways:
-  - argocd-gw
+  - portainer-gw
   http:
   - match:
     - uri:
         prefix: /
     route:
     - destination:
-        host: argocd # pods service name
+        host: portainer.portainer.svc.cluster.local # pods service name
         port:
-          number: 8080
+          number: 9000
 ---

@@ -1,0 +1,39 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: portainer-certs
+  namespace: istio-system
+  labels:
+    app.kubernetes.io/component: portainer
+    app.kubernetes.io/part-of: dashboard
+spec:
+  secretName: portainer-tls
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned-issuer
+    #name: letsencrypt-prd
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  subject:
+    countries:
+    - ID
+    organizations:
+    - Valkyrie
+    organizationalUnits:
+    - "Portainer Dashboard"
+    localities:
+    - Asgard
+    provinces:
+    - Yggdrasil
+   #streetAddresses: ["Vigrid"]
+   #postalCodes: ["12000"]
+   #serialNumber: ["1234567890"]
+  dnsNames:
+  - portainer
+  - portainer.portainer
+  - portainer.portainer.svc
+  - portainer.portainer.svc.cluster.local
+  - portainer.app.cluster.local
+---
