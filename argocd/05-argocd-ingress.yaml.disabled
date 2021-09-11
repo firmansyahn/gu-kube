@@ -16,10 +16,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - stronghold.jakwifi.id
+    - stronghold.app.cluster.local
     secretName: argocd-server-tls
   rules:
-  - host: stronghold.jakwifi.id
+  - host: stronghold.app.cluster.local
     http:
       paths:
       - path: /

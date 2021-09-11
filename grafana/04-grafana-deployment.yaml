@@ -8,13 +8,12 @@ metadata:
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: grafana
     app.kubernetes.io/part-of: monitoring-system
+    sidecar.istio.io/inject: "true"
 spec:
   replicas: 1
   selector:
     matchLabels: *Labels
   template:
-    annotations:
-      sidecar.istio.io/inject: "true"
     metadata:
       labels: *Labels
     spec:
