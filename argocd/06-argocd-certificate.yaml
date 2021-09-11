@@ -33,8 +33,6 @@ spec:
    #- "12000"
    #serialNumber: "1234567890"
   dnsNames:
-  - argocd-server
-  - argocd-server.argocd
   - argocd-server.argocd.svc
   - argocd-server.argocd.svc.cluster.local
   - argocd.app.cluster.local
