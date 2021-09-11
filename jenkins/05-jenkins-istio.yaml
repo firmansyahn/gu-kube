@@ -1,4 +1,4 @@
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: jenkins-gw
@@ -12,7 +12,7 @@ spec:
       name: http-jenkins
       protocol: HTTP
     hosts:
-    - jenkins.app.cluster.local
+    - "jenkins.app.cluster.local"
   - port:
       number: 443
       name: https-jenkins
@@ -21,9 +21,9 @@ spec:
       mode: SIMPLE
       credentialName: jenkins-tls
     hosts:
-    - jenkins.app.cluster.local
+    - "jenkins.app.cluster.local"
   - port:
-      number: 50000 # to expose internal service via external port 2379
+      number: 50000
       name: tcp-jnlp
       protocol: TCP
     hosts:
@@ -36,7 +36,7 @@ metadata:
   namespace: jenkins
 spec:
   hosts:
-  - jenkins.app.cluster.local
+  - "jenkins.app.cluster.local"
   gateways:
   - jenkins-gw
   http:
@@ -45,7 +45,7 @@ spec:
         prefix: /
     route:
     - destination:
-        host: jenkins # pods service name
+        host: jenkins.jenkins.svc.cluster.local
         port:
           number: 8080
   tcp:

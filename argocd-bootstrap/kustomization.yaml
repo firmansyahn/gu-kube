@@ -6,4 +6,4 @@ resources:
 patchesStrategicMerge:
   - argocd-configmap-patch.yaml
   - argocd-deployment-patch.yaml
-  - argocd-service-patch.yaml
+  #- argocd-service-patch.yaml

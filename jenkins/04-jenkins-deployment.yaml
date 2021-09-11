@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/component: jenkins
     app.kubernetes.io/part-of: ci-cd
     sidecar.istio.io/inject: "true"
+    version: v2.311
   name: jenkins
   namespace: jenkins
 spec:

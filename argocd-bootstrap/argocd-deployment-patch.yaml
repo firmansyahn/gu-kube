@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: argocd-server
+        version: v2.1.2
 ---
 apiVersion: apps/v1
 kind: Deployment
