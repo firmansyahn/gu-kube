@@ -44,21 +44,8 @@ spec:
         image: postgres:13
         imagePullPolicy: "IfNotPresent"
         ports:
-        - name: postgresql
+        - name: tcp-postgresql
           containerPort: 5432
-        readinessProbe:
-          httpGet:
-            path: /-/ready
-            port: 9090
-          initialDelaySeconds: 30
-          timeoutSeconds: 30
-        livenessProbe:
-          httpGet:
-            path: /-/healthy
-            port: 9090
-          initialDelaySeconds: 30
-          timeoutSeconds: 30
-        # based on 10 running nodes with 30 pods each
         resources:
           requests:
             cpu: 200m
@@ -103,8 +90,9 @@ spec:
     #Should same with StatefullSet spec.selector
     k8s-app: postgresql
   ports:
-  - protocol: TCP
-    port: 9090
-    targetPort: http-postgresql
+  - name: tcp-postgresql
+    protocol: TCP
+    port: 5432
+    targetPort: 5432
   sessionAffinity: ClientIP
 ---

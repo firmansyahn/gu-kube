@@ -65,7 +65,7 @@ spec:
   selector:
     app: jenkins
   ports:
-  - name: http-ui
+  - name: http-jenkins
     port: 8080
     protocol: TCP
     targetPort: 8080
