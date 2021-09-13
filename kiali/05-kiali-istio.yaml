@@ -1,0 +1,53 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: kiali-gateway
+  namespace: kiali
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http-prom
+      protocol: HTTP
+    hosts:
+    - "kiali.app.cluster.local"
+  - port:
+      number: 443
+      name: https-prom
+      protocol: HTTPS
+    tls:
+      credentialName: monitoring-tls
+      mode: SIMPLE
+    hosts:
+    - "kiali.app.cluster.local"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kiali
+  namespace: kiali
+spec:
+  hosts:
+  - "kiali.app.cluster.local"
+  gateways:
+  - kiali-gateway
+  http:
+  - route:
+    - destination:
+        host: kiali.kiali.svc.cluster.local
+        port:
+          number: 20001
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: kiali
+  namespace: kiali
+spec:
+  host: kiali.kiali.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---

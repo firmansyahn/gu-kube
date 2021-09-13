@@ -1,0 +1,16 @@
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+metadata:
+  name: kiali
+  annotations:
+    ansible.sdk.operatorframework.io/verbosity: "1"
+spec:
+  external_services:
+    grafana:
+      in_cluster_url: http://grafana.grafana.svc:3000
+      url: https://grafana.dxm.mci.net.id
+    istio:
+      url_service_version: http://istiod.istio-system:15014/version
+    prometheus:
+      url: http://prometheus.prometheus.svc:9090
+  istio_namespace: istio-system

@@ -1,13 +1,12 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: prometheus-certs
+  name: monitoring-certs
   namespace: istio-system
   labels:
-    app.kubernetes.io/component: prometheus
     app.kubernetes.io/part-of: monitoring-system
 spec:
-  secretName: prometheus-tls
+  secretName: monitoring-tls
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
@@ -21,7 +20,7 @@ spec:
     organizations:
     - Valkyrie
     organizationalUnits:
-    - "Prometheus"
+    - "Network Monitoring System"
     localities:
     - Asgard
     provinces:
@@ -32,5 +31,5 @@ spec:
    #- "12000"
    #serialNumber: "1234567890"
   dnsNames:
-  - prometheus.apps.cluster.local
+  - nms.app.cluster.local
 ---

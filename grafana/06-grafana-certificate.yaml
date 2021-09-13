@@ -31,7 +31,5 @@ spec:
    #postalCodes: ["12000"]
    #serialNumber: ["1234567890"]
   dnsNames:
-  - grafana.grafana.svc
-  - grafana.grafana.svc.cluster.local
   - grafana.app.cluster.local
 ---

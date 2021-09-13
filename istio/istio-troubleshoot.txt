@@ -79,3 +79,23 @@ curl -s -I -HHost:httpbin.example.com "http://$INGRESS_HOST:$INGRESS_PORT/header
 
 
 k exec -n istio-system istiod-6d9c4fdd6b-gg2nq -- curl localhost:8080/debug/configz
+
+
+#Troubleshoot Jenkins
+-------------------------------------------------------------------------------
+istioctl pc listeners jenkins-8474c94b98-7nblc.jenkins --port 50000
+ADDRESS      PORT  MATCH DESTINATION
+172.24.0.160 50000 ALL   Cluster: outbound|50000||jenkins.jenkins.svc.cluster.local
+
+istioctl pc clusters jenkins-8474c94b98-7nblc.jenkins --port 50000                   
+SERVICE FQDN                          PORT      SUBSET     DIRECTION     TYPE             DESTINATION RULE
+                                      50000     -          inbound       ORIGINAL_DST     
+jenkins.jenkins.svc.cluster.local     50000     -          outbound      EDS              
+
+istioctl pc clusters jenkins-8474c94b98-7nblc.jenkins --port 50000 --direction inbound -o json
+
+
+istioctl pc clusters jenkins-8474c94b98-7nblc.jenkins --port 50000 --fqdn jenkins.jenkins.svc.cluster.local --direction outbound -o json
+
+
+k exec -n jenkins test-pipeline-dua-main-4-7qbnt-qmsdn-pr983 -- ls /home/jenkins/agent/remoting

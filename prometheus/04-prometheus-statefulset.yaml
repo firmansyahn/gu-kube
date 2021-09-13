@@ -8,19 +8,24 @@ metadata:
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/part-of: monitoring-system
-    k8s-app: prometheus
+    sidecar.istio.io/inject: "true"
 spec:
-  serviceName: prometheus
   replicas: 1
+  serviceName: prometheus
   podManagementPolicy: "Parallel"
   updateStrategy:
     type: "RollingUpdate"
   selector:
     matchLabels: *Labels
   template:
-    annotations:
-      sidecar.istio.io/inject: "true"
     metadata:
+      annotations:
+        traffic.sidecar.istio.io/includeInboundPorts: ""   # do not intercept any inbound ports
+        traffic.sidecar.istio.io/includeOutboundIPRanges: ""  # do not intercept any outbound traffic
+        proxy.istio.io/config: |  # configure an env variable `OUTPUT_CERTS` to write certificates to the given folder
+          proxyMetadata:
+            OUTPUT_CERTS: /etc/istio-output-certs
+        sidecar.istio.io/userVolumeMount: '[{"name": "istio-certs", "mountPath": "/etc/istio-output-certs"}]' # mount the shared volume at sidecar proxy
       labels: *Labels
     spec:
       securityContext:
@@ -37,7 +42,7 @@ spec:
         - --web.console.templates=/usr/share/prometheus/consoles
         - --web.enable-lifecycle
         ports:
-        - name: http-prometheus
+        - name: http-prom
           containerPort: 9090
         readinessProbe:
           httpGet:
@@ -59,6 +64,8 @@ spec:
         volumeMounts:
         - name: config-file
           mountPath: /prometheus/config
+        - name: istio-certs
+          mountPath: /etc/prom-certs/
         - name: storage-tsdb
           mountPath: /prometheus/data
           subPath: ""
@@ -67,15 +74,18 @@ spec:
       - name: config-file
         configMap:
           name: prometheus-config
+      - name: istio-certs
+        emptyDir:
+          medium: Memory
       - name: storage-tsdb
         persistentVolumeClaim:
-          claimName: prometheus-data
+          claimName: data-prometheus
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
-              - key: k8s-app
+              - key: app
                 operator: In
                 values:
                 - prometheus
@@ -90,17 +100,15 @@ metadata:
     app: prometheus
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/part-of: monitoring-system
-    k8s-app: prometheus
 spec:
   clusterIP: None
   selector:
-    app: prometheus
     #Should same with StatefullSet spec.selector
-    k8s-app: prometheus
+    app: prometheus
   ports:
-  - name: http-prometheus
-    protocol: TCP
+  - name: http-prom
     port: 9090
+    protocol: TCP
     targetPort: 9090
   sessionAffinity: ClientIP
 ---

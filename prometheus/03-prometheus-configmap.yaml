@@ -15,7 +15,7 @@ data:
     - job_name: 'prometheus'
       scrape_interval: 15m
       static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['prometheus.prometheus.svc:9090']
     - job_name: 'grafana'
       scrape_interval: 60s
       static_configs:
@@ -24,6 +24,26 @@ data:
       scrape_interval: 60s
       static_configs:
       - targets: ['172.31.251.8:9537']
+
+    - job_name: 'istiod'
+      kubernetes_sd_configs:
+      - role: endpoints
+        namespaces:
+          names:
+          - istio-system
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: istiod;http-monitoring
+
+    - job_name: 'istio-envoy'
+      metrics_path: /stats/prometheus
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_container_port_name]
+        action: keep
+        regex: '.*-envoy-prom'
 
     # This rules will auto-discover kube-dns. Only if Prometheus annotations is "true"
     - job_name: kubernetes-service-endpoints
@@ -262,3 +282,4 @@ data:
       - action: replace
         source_labels: [__meta_kubernetes_pod_node_name]
         target_label: node
+---

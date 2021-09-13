@@ -15,6 +15,7 @@ spec:
     #name: letsencrypt-prd
   privateKey:
     algorithm: ECDSA
+    rotationPolicy: Always
     size: 256
   subject:
     countries:
@@ -31,7 +32,5 @@ spec:
    #postalCodes: ["12000"]
    #serialNumber: ["1234567890"]
   dnsNames:
-  - jenkins.jenkins.svc
-  - jenkins.jenkins.svc.cluster.local
   - jenkins.app.cluster.local
 ---
