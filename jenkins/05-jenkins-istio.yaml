@@ -8,14 +8,14 @@ spec:
     istio: ingressgateway # use Istio default gateway implementation
   servers:
   - port:
-      number: 80
       name: http-jenkins
+      number: 80
       protocol: HTTP
     hosts:
     - "jenkins.app.cluster.local"
   - port:
-      number: 443
       name: https-jenkins
+      number: 443
       protocol: HTTPS
     tls:
       mode: SIMPLE
@@ -23,8 +23,8 @@ spec:
     hosts:
     - "jenkins.app.cluster.local"
   - port:
-      number: 50000
       name: tcp-jnlp
+      number: 50000
       protocol: TCP
     hosts:
     - "jenkins.app.cluster.local"
