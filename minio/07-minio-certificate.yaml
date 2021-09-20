@@ -1,0 +1,37 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: minio-certs
+  namespace: istio-system
+  labels:
+    app.kubernetes.io/component: minio
+    app.kubernetes.io/part-of: storage
+spec:
+  secretName: minio-tls
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned-issuer
+  privateKey:
+    algorithm: ECDSA
+    rotationPolicy: Always
+    size: 256
+  subject:
+    countries:
+    - ID
+    organizations:
+    - Valkyrie
+    organizationalUnits:
+    - "Minio Cloud Storage"
+    localities:
+    - Asgard
+    provinces:
+    - Yggdrasil
+  dnsNames:
+  - minio
+  - minio.minio.svc.cluster.local
+  - minio.minio.svc.nebula.jkt.asean.org
+  - minio.app.example.id
+  - www-minio.app.example.id
+  - '*.minio.app.example.id'
+---

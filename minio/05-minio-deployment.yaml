@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  namespace: minio
+  labels: &Labels
+    app: minio
+    app.kubernetes.io/component: minio
+    app.kubernetes.io/part-of: storage
+    version: "20210918180959"
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *Labels
+  template:
+    metadata:
+      name: minio
+      labels: *Labels
+    spec:
+      securityContext:
+        fsGroup: 1001007
+        fsGroupChangePolicy: "OnRootMismatch"
+      serviceAccountName: minio
+      containers:
+      - name: minio
+        image: minio/minio
+        imagePullPolicy: Always
+        command: ["minio"]
+        args: ["server", "/data", "--console-address", ":9001"]
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        ports:
+        - name: http-api
+          containerPort: 9000
+        - name: http-console
+          containerPort: 9001
+        env:
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: minio-user
+              key: accesskey
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: minio-user
+              key: secretkey
+        envFrom:
+        - configMapRef:
+            name: minio-server-config
+        livenessProbe:
+          tcpSocket:
+            port: 9000
+          timeoutSeconds: 10
+      imagePullSecrets:
+      - name: jenkins-image-pull
+      nodeSelector:
+        node-role.kubernetes.io/worker: worker
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-minio
+      - name: minio-user
+        secret:
+          secretName: minio-user
+      - name: minio-server-config
+        configMap:
+          name: aminio-server-config
+      - name: minio-console-config
+        configMap:
+          name: aminio-console-config
+---

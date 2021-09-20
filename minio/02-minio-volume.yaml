@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: minio
+  labels:
+    app: minio
+    type: local
+spec:
+  storageClassName: local-hostpath
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: data-minio
+    namespace: minio
+  capacity:
+    storage: 80Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: "/data/minio"
+  nodeAffinity:
+    required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+              operator: In
+              values:
+              - <NODE-NAME>
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-minio
+  namespace: minio
+  labels:
+    app: minio
+spec:
+  storageClassName: local-hostpath
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 80Gi
+---

@@ -97,5 +97,6 @@ istioctl pc clusters jenkins-8474c94b98-7nblc.jenkins --port 50000 --direction i
 
 istioctl pc clusters jenkins-8474c94b98-7nblc.jenkins --port 50000 --fqdn jenkins.jenkins.svc.cluster.local --direction outbound -o json
 
+istioctl proxy-status 
 
-k exec -n jenkins test-pipeline-dua-main-4-7qbnt-qmsdn-pr983 -- ls /home/jenkins/agent/remoting
+istioctl analyze --all-namespaces

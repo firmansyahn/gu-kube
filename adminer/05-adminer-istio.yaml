@@ -1,44 +1,45 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: argocd-gw
-  namespace: argocd
+  name: adminer-gw
+  namespace: adminer
 spec:
   selector:
     istio: ingressgateway # use Istio default gateway implementation
   servers:
   - port:
-      name: http-argocd
       number: 80
+      name: http-adminer
       protocol: HTTP
-    tls:
-      httpsRedirect: true
     hosts:
-    - "argocd.app.example.org"
+    - "adminer.app.cluster.local"
   - port:
-      name: https-argocd
       number: 443
+      name: https-adminer
       protocol: HTTPS
     tls:
-      credentialName: argocd-server-tls
       mode: SIMPLE
+      credentialName: adminer-tls
     hosts:
-    - "argocd.app.example.org"
+    - "adminer.app.cluster.local"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: argocd
-  namespace: argocd
+  name: adminer
+  namespace: adminer
 spec:
   hosts:
-  - "argocd.app.example.org"
+  - "adminer.app.cluster.local"
   gateways:
-  - argocd-gw
+  - adminer-gw
   http:
-  - route:
+  - match:
+    - uri:
+        prefix: /
+    route:
     - destination:
-        host: argocd-server.argocd.svc.cluster.local
+        host: adminer.adminer.svc.cluster.local
         port:
-          number: 80
+          number: 8080
 ---

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminer
+  namespace: adminer
+  labels: &Labels
+    app: adminer
+    app.kubernetes.io/component: adminer
+    app.kubernetes.io/part-of: database
+    sidecar.istio.io/inject: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *Labels
+  template:
+    metadata:
+      labels: *Labels
+    spec:
+      securityContext: {}
+      containers:
+      - name: adminer
+        image: adminer:standalone
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http-adminer
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 1            
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      nodeSelector:
+        node-role.kubernetes.io/worker: worker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminer
+  namespace: adminer
+  labels:
+    app: adminer
+    app.kubernetes.io/component: adminer
+    app.kubernetes.io/part-of: database
+spec:
+  selector:
+    app: adminer
+  ports:
+  - name: http-adminer
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  sessionAffinity: ClientIP
+---

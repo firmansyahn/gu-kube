@@ -1,9 +1,48 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: argocd-cmd-params-cm
+  namespace: argocd
   labels:
     app.kubernetes.io/name: argocd-cmd-params-cm
     app.kubernetes.io/part-of: argocd
-  name: argocd-cmd-params-cm
 data:
   server.insecure: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  url: https://argocd.app.example.org
+
+  dex.config: |
+    connectors:
+      - type: github
+        id: github
+        name: <Github-Org-Name> Github OAuth
+        config:
+          clientID: <Github-OAuth-clientID-String>
+          clientSecret: <Github-OAuth-clientSecret-String>
+          orgs:
+          - name: <Github-Org-Name>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+data:
+  policy.default: role:readonly
+  policy.csv: |
+    p, role:org-admin, applications, *, */*, allow
+    p, role:org-admin, clusters, *, *, allow
+    p, role:org-admin, projects, *, *, allow
+    p, role:org-admin, repositories, *, *, allow
+
+    g, <Github-Org-Name>:<Github-Org-Team-Name>, role:org-admin
+---

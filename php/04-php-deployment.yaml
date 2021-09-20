@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ppms-api
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: ppms
+    app.kubernetes.io/managed-by: deptech
+  name: ppms-api
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 30
+  selector:
+    matchLabels:
+      app: ppms-api
+      app.kubernetes.io/component: api
+      app.kubernetes.io/part-of: ppms
+  template:
+    metadata:
+      labels:
+        app: ppms-api
+        app.kubernetes.io/component: api
+        app.kubernetes.io/part-of: ppms
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:mainline-alpine
+        ports:
+        - containerPort: 80
+          name: http-nginx
+          protocol: TCP
+        volumeMounts:
+        - name: nginx-root-vol
+          mountPath: /usr/share/nginx/html
+        - name: nginx-config-vol
+          mountPath: /etc/nginx/conf.d
+      - name: php
+        image: php:8-fpm-bullseye
+        #image: deptech/php:7.3-fpm-ace
+        imagePullPolicy: Always
+        #imagePullPolicy: IfNotPresent
+        env:
+          - name: PHP_INI_SCAN_DIR
+            value: :/usr/local/etc/php/conf.custom
+        ports:
+        - containerPort: 9000
+          name: tcp-fastcgi
+          protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: tcp-fastcgi
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        volumeMounts:
+        - name: nginx-root-vol
+          mountPath: /usr/share/nginx/html
+        - name: php-config-vol
+          mountPath: /usr/local/etc/php/conf.custom
+      volumes:
+      - name: nginx-root-vol
+        emptyDir: {}
+      - name: nginx-config-vol
+        configMap:
+          name: ppms-api-config
+          items:
+          - key: vhost-config
+            path: default.conf
+      - name: php-config-vol
+        configMap:
+          name: ppms-api-config
+          items:
+          - key: php-ini
+            path: default.ini
+---

@@ -12,11 +12,10 @@ spec:
     port: 5557
     protocol: TCP
     targetPort: 5557
-  - name: metrics-dex-server
+  - name: tcp-metrics
     port: 5558
     protocol: TCP
     targetPort: 5558
-
 ---
 apiVersion: v1
 kind: Service
@@ -24,7 +23,7 @@ metadata:
   name: argocd-metrics
 spec:
   ports:
-  - name: metrics-metrics
+  - name: tcp-metrics
     port: 8082
     protocol: TCP
     targetPort: 8082
@@ -39,7 +38,7 @@ spec:
     port: 8081
     protocol: TCP
     targetPort: 8081
-  - name: metrics-repo-server
+  - name: tcp-metrics
     port: 8084
     protocol: TCP
     targetPort: 8084
@@ -56,8 +55,6 @@ spec:
     targetPort: 8080
   - name: https-argocd-server
     port: 443
-    protocol: TCP
-    targetPort: 8080
     $patch: delete
 ---
 apiVersion: v1
@@ -66,7 +63,7 @@ metadata:
   name: argocd-server-metrics
 spec:
   ports:
-  - name: http-server-metrics
+  - name: tcp-metrics
     port: 8083
     protocol: TCP
     targetPort: 8083
