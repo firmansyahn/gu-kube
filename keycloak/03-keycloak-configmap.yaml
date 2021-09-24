@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-config
+  namespace: keycloak
+  labels:
+    app.kubernetes.io/component: keycloak
+    app.kubernetes.io/part-of: idm
+data:
+  PROXY_ADDRESS_FORWARDING: "true"
+---

@@ -9,19 +9,19 @@ spec:
   servers:
   - port:
       number: 80
-      name: http-prom
+      name: http-kiali
       protocol: HTTP
     hosts:
-    - "kiali.app.cluster.local"
+    - "kiali.app.example.id"
   - port:
       number: 443
-      name: https-prom
+      name: https-kiali
       protocol: HTTPS
     tls:
       credentialName: monitoring-tls
       mode: SIMPLE
     hosts:
-    - "kiali.app.cluster.local"
+    - "kiali.app.example.id"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -30,7 +30,7 @@ metadata:
   namespace: kiali
 spec:
   hosts:
-  - "kiali.app.cluster.local"
+  - "kiali.app.example.id"
   gateways:
   - kiali-gateway
   http:

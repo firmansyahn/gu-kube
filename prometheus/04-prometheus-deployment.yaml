@@ -1,20 +1,15 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: prometheus
   namespace: prometheus
   labels: &Labels
     app: prometheus
-    #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: prometheus
-    app.kubernetes.io/part-of: monitoring-system
-    sidecar.istio.io/inject: "true"
+    app.kubernetes.io/part-of: monitoring
 spec:
   replicas: 1
   serviceName: prometheus
-  podManagementPolicy: "Parallel"
-  updateStrategy:
-    type: "RollingUpdate"
   selector:
     matchLabels: *Labels
   template:
@@ -32,9 +27,9 @@ spec:
         fsGroup: 1001001
       serviceAccountName: prometheus
       containers:
-      - name: prometheus-server
+      - name: prometheus
         image: prom/prometheus:latest
-        imagePullPolicy: "IfNotPresent"
+        imagePullPolicy: IfNotPresent
         args:
         - --config.file=/prometheus/config/prometheus.yaml
         - --storage.tsdb.path=/prometheus/data
@@ -42,25 +37,28 @@ spec:
         - --web.console.templates=/usr/share/prometheus/consoles
         - --web.enable-lifecycle
         ports:
-        - name: http-prom
-          containerPort: 9090
+        - containerPort: 9090
+          name: http-prometheus
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: 9090
+          initialDelaySeconds: 30
+          timeoutSeconds: 30 
         readinessProbe:
           httpGet:
             path: /-/ready
             port: 9090
           initialDelaySeconds: 30
           timeoutSeconds: 30
-        livenessProbe:
-          httpGet:
-            path: /-/healthy
-            port: 9090
-          initialDelaySeconds: 30
-          timeoutSeconds: 30
-        # based on 10 running nodes with 30 pods each
         resources:
+          limits:
+            cpu: 1000m
+            memory: 250Mi
           requests:
-            cpu: 200m
-            memory: 1000Mi
+            cpu: 100m
+            memory: 100Mi
         volumeMounts:
         - name: config-file
           mountPath: /prometheus/config
@@ -69,7 +67,7 @@ spec:
         - name: storage-tsdb
           mountPath: /prometheus/data
           subPath: ""
-      terminationGracePeriodSeconds: 300
+      terminationGracePeriodSeconds: 60
       volumes:
       - name: config-file
         configMap:
@@ -80,16 +78,6 @@ spec:
       - name: storage-tsdb
         persistentVolumeClaim:
           claimName: data-prometheus
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - prometheus
-            topologyKey: "kubernetes.io/hostname"
 ---
 kind: Service
 apiVersion: v1
@@ -99,11 +87,9 @@ metadata:
   labels:
     app: prometheus
     app.kubernetes.io/component: prometheus
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
 spec:
-  clusterIP: None
   selector:
-    #Should same with StatefullSet spec.selector
     app: prometheus
   ports:
   - name: http-prom

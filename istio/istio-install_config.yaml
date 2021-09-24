@@ -29,6 +29,9 @@ spec:
         istio: istio-ingressgateway-prd
   meshConfig:
     accessLogFile: /dev/stdout
+    defaultConfig:
+      gatewayTopology:
+        numTrustedProxies: 2
   profile: default
   values:
     sidecarInjectorWebhook:

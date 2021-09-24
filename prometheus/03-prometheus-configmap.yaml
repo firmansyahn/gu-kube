@@ -5,7 +5,7 @@ metadata:
   namespace: prometheus
   labels:
     app.kubernetes.io/component: prometheus
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
 data:
   prometheus.yaml: |
     global:
