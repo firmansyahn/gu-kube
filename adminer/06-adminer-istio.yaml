@@ -12,7 +12,7 @@ spec:
       name: http-adminer
       protocol: HTTP
     hosts:
-    - "adminer.app.cluster.local"
+    - "adminer.app.example.id"
   - port:
       number: 443
       name: https-adminer
@@ -21,7 +21,7 @@ spec:
       mode: SIMPLE
       credentialName: adminer-tls
     hosts:
-    - "adminer.app.cluster.local"
+    - "adminer.app.example.id"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -30,11 +30,12 @@ metadata:
   namespace: adminer
 spec:
   hosts:
-  - "adminer.app.cluster.local"
+  - "adminer.app.example.id"
   gateways:
   - adminer-gw
   http:
-  - match:
+  - name: adminer-ui
+    match:
     - uri:
         prefix: /
     route:

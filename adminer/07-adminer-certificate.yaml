@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: keycloak-certs
+  name: adminer-certs
   namespace: istio-system
   labels:
-    app.kubernetes.io/component: keycloak
-    app.kubernetes.io/part-of: iam
+    app.kubernetes.io/component: adminer
+    app.kubernetes.io/part-of: database
 spec:
-  secretName: keycloak-tls
+  secretName: adminer-tls
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
@@ -22,13 +22,14 @@ spec:
     organizations:
     - Valkyrie
     organizationalUnits:
-    - "Identity Management"
+    - "Adminer"
     localities:
     - Asgard
     provinces:
     - Yggdrasil
   dnsNames:
-  - keycloak
-  - keycloak.keycloak.svc.cluster.local
-  - keycloak.app.example.id
+  - adminer
+  - adminer.adminer.svc
+  - adminer.adminer.svc.cluster.local
+  - adminer.app.example.id
 ---

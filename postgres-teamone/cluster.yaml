@@ -1,0 +1,37 @@
+apiVersion: "acid.zalan.do/v1"
+kind: "postgresql"
+
+metadata:
+  name: "alunit-infra"
+  namespace: "postgres-infra"
+  labels:
+    team: alunit
+
+spec:
+  teamId: "alunit"
+  postgresql:
+    version: "13"
+  numberOfInstances: 3
+  enableConnectionPooler: true
+
+  users:
+    netboxoper: []
+    grafanaoper: []
+    keycloakoper: []
+  databases:
+    netbox: netboxoper
+    grafana: grafanaoper
+    keycloak: keycloakoper
+  allowedSourceRanges:
+    # IP ranges to access your cluster go here
+  preparedDatabases: {}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 500m
+      memory: 500Mi
+  volume:
+    size: "10Gi"
+---

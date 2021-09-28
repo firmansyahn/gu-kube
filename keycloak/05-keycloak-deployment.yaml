@@ -5,6 +5,8 @@ metadata:
   namespace: keycloak
   labels: &Labels
     app: keycloak
+    app.kubernetes.io/component: keycloak
+    app.kubernetes.io/part-of: iam
     version: "15.0.2"
 spec:
   replicas: 1
@@ -19,9 +21,15 @@ spec:
         image: quay.io/keycloak/keycloak:15.0.2
         env:
         - name: KEYCLOAK_USER
-          value: "admin"
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-secret
+              key: root.username
         - name: KEYCLOAK_PASSWORD
-          value: "admin"
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-secret
+              key: root.password
         envFrom:
         - configMapRef:
             name: keycloak-config

@@ -7,7 +7,7 @@ metadata:
     app: grafana
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: grafana
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
     sidecar.istio.io/inject: "true"
 spec:
   replicas: 1
@@ -106,11 +106,10 @@ metadata:
     app: grafana
     #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: grafana
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
 spec:
   selector:
     app: grafana
-    # k8s-app: grafana
   ports:
   - name: http-grafana
     port: 3000

@@ -7,7 +7,7 @@ metadata:
     app: adminer
     app.kubernetes.io/component: adminer
     app.kubernetes.io/part-of: database
-    sidecar.istio.io/inject: "true"
+    version: "4.8.1"
 spec:
   replicas: 1
   selector:
@@ -19,7 +19,7 @@ spec:
       securityContext: {}
       containers:
       - name: adminer
-        image: adminer:standalone
+        image: adminer:4.8.1-standalone
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

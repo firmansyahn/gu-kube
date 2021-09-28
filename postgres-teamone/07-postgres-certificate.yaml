@@ -1,0 +1,35 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: alunit-infra-certs
+  namespace: postgres-infra
+  labels:
+    app.kubernetes.io/component: postgresql
+    app.kubernetes.io/part-of: database
+spec:
+  secretName: alunit-infra-tls
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned-issuer
+  privateKey:
+    algorithm: ECDSA
+    rotationPolicy: Always
+    size: 256
+  subject:
+    countries:
+    - ID
+    organizations:
+    - "PT ALUN"
+    organizationalUnits:
+    - "Database"
+    localities:
+    - "Jakarta Selatan"
+    provinces:
+    - "DKI Jakarta"
+  dnsNames:
+  - alunit-infra
+  - alunit-infra.postgres-infra.svc
+  - alunit-infra.postgres-infra.svc.cluster.local
+  - alunit-infra.app.example.id
+---

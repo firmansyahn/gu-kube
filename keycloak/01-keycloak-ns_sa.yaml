@@ -4,7 +4,7 @@ metadata:
   name: keycloak
   labels:
     app.kubernetes.io/component: keycloak
-    app.kubernetes.io/part-of: idm
+    app.kubernetes.io/part-of: iam
     istio-injection: enabled
 ---
 apiVersion: v1

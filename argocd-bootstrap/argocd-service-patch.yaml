@@ -53,8 +53,7 @@ spec:
     port: 80
     protocol: TCP
     targetPort: 8080
-  - name: https-argocd-server
-    port: 443
+  - name: https
     $patch: delete
 ---
 apiVersion: v1

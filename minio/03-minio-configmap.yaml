@@ -21,4 +21,7 @@ data:
   MINIO_BROWSER_REDIRECT_URL: "https://www-minio.app.example.id"
   MINIO_DOMAIN: "minio.app.example.id"
   MINIO_SERVER_URL: "http://minio.minio.svc:9000"
+
+  #MINIO_IDENTITY_OPENID_REDIRECT_URI: "https://www-minio.app.example.id/oauth_callback"
+  #MINIO_IDENTITY_OPENID_SCOPES: "openid,policy_role_attribute,profile,email,groups"
 ---
