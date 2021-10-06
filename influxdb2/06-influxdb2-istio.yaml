@@ -1,0 +1,61 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: influxdb2-gateway
+  namespace: influxdb2
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http-influxdb2
+      protocol: HTTP
+    hosts:
+    - "influxdb2.app.example.id"
+  - port:
+      number: 443
+      name: https-influxdb2
+      protocol: HTTPS
+    tls:
+      credentialName: influxdb2-tls
+      mode: SIMPLE
+    hosts:
+    - "influxdb2.app.example.id"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: influxdb2
+  namespace: influxdb2
+spec:
+  hosts:
+  - "influxdb2.app.example.id"
+  gateways:
+  - influxdb2-gateway
+  http:
+  - name: query
+    match:
+    - uri:
+        prefix: /query
+    route:
+    - destination:
+        host: influxdb2.influxdb2.svc.cluster.local
+        port:
+          number: 8086
+  - name: write
+    match:
+    - uri:
+        prefix: /write
+    route:
+    - destination:
+        host: influxdb2-relay.influxdb2.svc.cluster.local
+        port:
+          number: 9096
+  - name: default
+    route:
+    - destination:
+        host: influxdb2-headless.influxdb2.svc.cluster.local
+        port:
+          number: 8086
+---

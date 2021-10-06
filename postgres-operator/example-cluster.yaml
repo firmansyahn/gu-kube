@@ -1,0 +1,103 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: huh-test
+spec:
+  dockerImage: registry.opensource.zalan.do/acid/spilo-13:2.0-p7
+  teamId: "huh"
+  numberOfInstances: 3
+  users:
+    root:
+    - superuser
+    - createdb
+    - login
+    puser:
+    - createdb
+    - login
+  enableMasterLoadBalancer: false
+  enableReplicaLoadBalancer: false
+  enableConnectionPooler: true
+  enableReplicaConnectionPooler: true
+  allowedSourceRanges:
+  - 0.0.0.0/0
+  databases:
+    tdb: puser
+  preparedDatabases:
+    tdb:
+      defaultUsers: true
+      extensions:
+        pg_partman: public
+      schemas:
+        data: {}
+        history:
+          defaultRoles: true
+          defaultUsers: true
+  postgresql:
+    version: "13"
+    parameters:
+      shared_buffers: "128MB"
+      max_connections: "100"
+      log_statement: "all"
+      log_min_duration_statement: "300ms"
+  volume:
+    size: 100Gi
+    storageClass: vmfs-local
+  additionalVolumes:
+    - name: empty
+      mountPath: /opt/empty
+      targetContainers:
+        - all
+      volumeSource:
+        emptyDir: {}
+  enableShmVolume: true
+  resources:
+    requests:
+      cpu: 1024m
+      memory: 1024Mi
+    limits:
+      cpu: 4096m
+      memory: 2048Mi
+
+  patroni:
+    initdb:
+      encoding: "UTF8"
+      locale: "en_US.UTF-8"
+      data-checksums: "true"
+    pg_hba:
+      # OPEN THE GATES
+      - local all         all           trust
+      - host  all         all 0.0.0.0/0 trust
+      - host  all         all ::0/0     trust
+      - local replication all           trust
+      - host  replication all 0.0.0.0/0 trust
+      - host  replication all ::0/0     trust
+    ttl: 15
+    loop_wait: &loop_wait 5
+    retry_timeout: 5
+    synchronous_mode: false
+    synchronous_mode_strict: false
+    maximum_lag_on_failover: 33554432
+
+  connectionPooler:
+    numberOfInstances: 2
+    mode: "transaction"
+    schema: "pooler"
+    resources:
+      requests:
+        cpu: 1024m
+        memory: 128Mi
+      limits:
+        cpu: 1024m
+        memory: 256Mi
+
+  initContainers:
+  - name: date
+    image: busybox
+    command: [ "/bin/date" ]
+
+  tls:
+    secretName: ""  # should correspond to a Kubernetes Secret resource to load
+    certificateFile: "tls.crt"
+    privateKeyFile: "tls.key"
+    caFile: ""  # optionally configure Postgres with a CA certificate
+    caSecretName: "" # optionally the ca.crt can come from this secret instead.

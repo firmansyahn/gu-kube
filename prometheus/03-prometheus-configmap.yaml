@@ -9,7 +9,7 @@ metadata:
 data:
   prometheus.yaml: |
     global:
-      scrape_interval: 30s
+      scrape_interval: 120s
 
     scrape_configs:
     - job_name: 'prometheus'
@@ -17,13 +17,17 @@ data:
       static_configs:
       - targets: ['prometheus.prometheus.svc:9090']
     - job_name: 'grafana'
-      scrape_interval: 60s
+      scrape_interval: 120s
       static_configs:
       - targets: ['grafana.grafana.svc:3000']
     - job_name: 'crio'
       scrape_interval: 60s
       static_configs:
       - targets: ['172.31.251.8:9537']
+    - job_name: 'mikrotik-exporter'
+      scrape_interval: 60s
+      static_configs:
+      - targets: ['mikrotik-exporter.monitoring.svc:9436']
 
     - job_name: 'istiod'
       kubernetes_sd_configs:
@@ -266,7 +270,8 @@ data:
         regex: monitoring;node-exporter
         source_labels: 
         - __meta_kubernetes_namespace
-        - __meta_kubernetes_pod_label_k8s_app
+        - __meta_kubernetes_pod_label_app
+        #- __meta_kubernetes_pod_label_k8s_app
       - action: replace
         source_labels: [__meta_kubernetes_namespace]
         target_label: namespace

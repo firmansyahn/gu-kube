@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &Labels
+    app: sak-cicd
+    version: "0.1.6"
+  name: sak-cicd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sak-cicd
+  template:
+    metadata:
+      labels: *Labels
+    spec:
+      containers:
+      - name: sak-cicd
+        image: quay.io/firngl/sak-cicd:0.1.6
+        command:
+        - cat
+        tty: true
+        resources:
+          limit:
+            cpu: 250m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 128Mi
+        securityContext:
+          privileged: true
+---

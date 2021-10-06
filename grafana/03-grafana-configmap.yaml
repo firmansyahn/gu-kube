@@ -14,8 +14,16 @@ data:
     plugins = /var/lib/grafana/plugins
 
     [server]
-    ;domain = 
-    ;root_url = 
+    domain = grafana.app.example.id
+    root_url = https://grafana.app.example.id
+    
+    [database]
+    type = postgres
+    host = <database-host>:5432
+    name = <database-name>
+    user = <database-user>
+    password = <database-password>
+    ssl_mode = disable
 
     [analytics]
     check_for_updates = true
@@ -29,6 +37,18 @@ data:
     [auth.anonymous]
     enabled = false
     hide_version = true
+    
+    [auth.generic_oauth]
+    enabled = true
+    scopes = openid email profile groups
+    name = IAM KEYCLOACK
+    allow_sign_up = true
+    client_id = grafana
+    client_secret = <KEYCLOAK_CLIENT_SECRET>
+    auth_url = https://keycloak.app.example.id/auth/realms/<KEYCLOAK_REALM>/protocol/openid-connect/auth
+    token_url = https://keycloak.app.example.id/auth/realms/<KEYCLOAK_REALM>/protocol/openid-connect/token
+    api_url = https://keycloak.app.example.id/auth/realms/<KEYCLOAK_REALM>/protocol/openid-connect/userinfo
+    tls_skip_verify_insecure = true
 
     [auth.google]
     enabled = false
@@ -47,7 +67,6 @@ data:
 
     [log]
     mode = console
-
   ldap.toml: |
     [[servers]]
     host = "127.0.0.1"

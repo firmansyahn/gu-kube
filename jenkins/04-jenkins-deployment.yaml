@@ -36,14 +36,14 @@ spec:
         - name: tcp-jnlp
           containerPort: 50000
         readinessProbe:
+          failureThreshold: 5
           httpGet:
             path: /login
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 10
-          timeoutSeconds: 5
           successThreshold: 2
-          failureThreshold: 5
+          timeoutSeconds: 5
         volumeMounts:
         - mountPath: /var/jenkins_home
           name: jenkins-home

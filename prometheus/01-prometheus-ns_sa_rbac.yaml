@@ -5,7 +5,7 @@ metadata:
   name: prometheus
   labels:
     app.kubernetes.io/component: prometheus
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -14,7 +14,7 @@ metadata:
   namespace: prometheus
   labels:
     app.kubernetes.io/component: prometheus
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -22,7 +22,7 @@ metadata:
   name: prometheus
   labels:
     app.kubernetes.io/component: prometheus
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
 rules:
 - apiGroups: [""]
   resources:
@@ -50,7 +50,7 @@ metadata:
   name: prometheus
   labels:
     app.kubernetes.io/component: prometheus
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

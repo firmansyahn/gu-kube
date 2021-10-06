@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mikrotik-exporter-config
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: mikrotik-exporter
+    app.kubernetes.io/part-of: monitoring
+data:
+  config.yml: |
+    devices:
+    - name: rt-alun-tebet
+      address: 192.168.233.1
+      user: prometheus
+      password: 0t6lr6Z0JpzHUc5p5swG
+    - name: rt-alun-cakung
+      address: 192.168.233.2
+      user: prometheus
+      password: 0t6lr6Z0JpzHUc5p5swG
+
+    features:
+      bgp: false
+      conntrack: true
+      dhcp: true
+      dhcpv6: false
+      dhcpl: true
+      routes: true
+      pools: true
+      optics: true
+      wlansta: false
+      wlanif: false
+      ipsec: true
+      lte: false
+      netwatch: true
+---

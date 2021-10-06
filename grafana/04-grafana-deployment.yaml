@@ -5,26 +5,26 @@ metadata:
   namespace: grafana
   labels: &Labels
     app: grafana
-    #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: grafana
     app.kubernetes.io/part-of: monitoring
-    sidecar.istio.io/inject: "true"
+    version: "8.1.5"
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels: *Labels
   template:
     metadata:
       labels: *Labels
     spec:
-      securityContext:
-        fsGroup: 1001002
-        supplementalGroups:
-        - 0    
+      securityContext: {}
       containers:
       - name: grafana
-        image: grafana/grafana:latest
+        image: grafana/grafana:8.1.5
         imagePullPolicy: IfNotPresent
+        envFrom:
+        - secretRef:
+            name: grafana-secret
         ports:
         - containerPort: 3000
           name: http-grafana
@@ -50,7 +50,7 @@ spec:
         resources:
           limits:
             cpu: 500m
-            memory: 1000Mi
+            memory: 500Mi
           requests:
             cpu: 100m
             memory: 100Mi
@@ -104,7 +104,6 @@ metadata:
   namespace: grafana
   labels:
     app: grafana
-    #app.kubernetes.io/name: $APP_INSTANCE_NAME
     app.kubernetes.io/component: grafana
     app.kubernetes.io/part-of: monitoring
 spec:

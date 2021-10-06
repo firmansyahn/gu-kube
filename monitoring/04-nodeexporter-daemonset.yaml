@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations: &Annotations
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9100"
+    prometheus.io/scheme: http
+  name: node-exporter
+  namespace: monitoring
+  labels: &Labels
+    app: node-exporter
+    app.kubernetes.io/component: node-exporter
+    app.kubernetes.io/part-of: monitoring
+    version: "1.2.2"
+spec:
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels: *Labels
+  template:
+    metadata:
+      labels: *Labels
+    spec:
+      enableServiceLinks: false
+      hostIPC: true
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - args:
+        - --path.procfs=/host/proc
+        - --path.sysfs=/host/sys
+        - --path.rootfs=/host
+        - --collector.cpu.info
+        - --collector.diskstats.ignored-devices=^(dm-|ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\\d+n\\d+p)\\d+$
+        - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+|var/lib/containers/storage/.+|run/containers/storage/.+)($|/)
+        - --collector.netclass.ignored-devices=^(lo|veth.+|cali\w{11})$
+        - --collector.netdev.device-exclude=^(lo|docker[0-9]|dummy0|kube-dummy-if|veth.+|br\-.+|cali\w{11}|tunl0|tun\-.+)$
+        #- --no-collector.bcache
+        - --no-collector.bonding
+        #- --no-collector.btrfs
+        - --no-collector.fibrechannel
+        #- --no-collector.hwmon
+        - --no-collector.infiniband
+        #- --no-collector.mdadm
+        - --no-collector.meminfo_numa
+        - --no-collector.nfs
+        - --no-collector.nfsd
+        - --no-collector.nvme
+        - --no-collector.powersupplyclass
+        - --no-collector.pressure
+        - --no-collector.tapestats
+        - --no-collector.thermal_zone
+        - --no-collector.wifi
+        - --no-collector.zfs
+        - --log.level=debug
+        #- --web.config="/etc/config/web.yml"
+        name: node-exporter
+        image: prom/node-exporter:v1.2.2
+        ports:
+        - containerPort: 9100
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        securityContext:
+          capabilities:
+            add:
+            - SYS_PTRACE
+            - SYS_TIME
+        volumeMounts:
+        - name: config-file
+          mountPath: "/etc/config/"
+        - name: root
+          mountPath: /host
+          mountPropagation: HostToContainer
+          readOnly: true
+      volumes:
+      - name: config-file
+        configMap:
+          name: node-exporter-config
+      - hostPath:
+          path: /
+        name: root
+---

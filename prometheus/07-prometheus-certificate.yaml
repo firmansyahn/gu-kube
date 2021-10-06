@@ -32,5 +32,7 @@ spec:
    #- "12000"
    #serialNumber: "1234567890"
   dnsNames:
-  - prometheus.apps.cluster.local
+  - prometheus.prometheus.svc
+  - prometheus.prometheus.svc.cluster.local
+  - prometheus.app.example.id
 ---

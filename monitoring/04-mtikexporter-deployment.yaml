@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: &Annotations
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9436"
+    prometheus.io/scheme: http
+  name: mikrotik-exporter
+  namespace: monitoring
+  labels: &Labels
+    app: mikrotik-exporter
+    app.kubernetes.io/component: mikrotik-exporter
+    app.kubernetes.io/part-of: monitoring
+    version: "1.0.12-DEVEL"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels: *Labels
+  template:
+    metadata:
+      annotations: *Annotations
+      labels: *Labels
+    spec:
+      securityContext: {}
+      containers:
+      - args:
+        - -config-file=/etc/config/config.yml
+        env:
+        - name: CONFIG_FILE
+          value: /app/config/config.yml
+        name: mikrotik-exporter
+        image: nshttpd/mikrotik-exporter:1.0.12-DEVEL
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9436
+          name: http-mtikexpt
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 250Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - name: config-file
+          mountPath: "/app/config/"
+      volumes:
+      - name: config-file
+        configMap:
+          name: mikrotik-exporter-config
+---

@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
   labels:
     app.kubernetes.io/component: node-exporter
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
 data:
   web.yml: |
     #tls_server_config:
@@ -13,3 +13,4 @@ data:
     #  key_file: /etc/config/tls.key
     #basic_auth_users:
     #  prometheus: $2y$10$EYxs8IOG46m9CtpB/XlPxO1ei7E4BjAen0SUv6di7mD4keR/8JO6m
+---

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mikrotik-exporter
+  namespace: monitoring
+  labels:
+    app: mikrotik-exporter
+    app.kubernetes.io/component: mikrotik-exporter
+    app.kubernetes.io/part-of: monitoring
+spec:
+  selector:
+    app: mikrotik-exporter
+  ports:
+  - name: http-mikrotik-exporter
+    port: 9436
+    protocol: TCP
+    targetPort: 9436
+  sessionAffinity: ClientIP
+---

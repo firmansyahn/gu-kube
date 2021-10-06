@@ -1,0 +1,79 @@
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+metadata:
+  name: kiali
+  annotations:
+    ansible.sdk.operatorframework.io/verbosity: "1"
+spec:
+  auth:
+    strategy: openid
+    openid:
+      client_id: "kiali"
+      disable_rbac: true
+      insecure_skip_verify_tls: true
+      issuer_uri: "https://accounts.app.ptalun.com/auth/realms/alun"
+      scopes: ["openid", "profile", "email", "groups"]
+      username_claim: "email"
+  deployment:
+    accessible_namespaces:
+    - '**'
+    ingress_enabled: false
+    pod_labels:
+      sidecar.istio.io/inject: "true"
+  external_services:
+    grafana:
+      auth:
+        #ca_file: ""
+        insecure_skip_verify: true
+        password: "kiali"
+        token: "eyJrIjoiaDJicXNsbHdqV3hGN2lGbjNkN21oa2xNeG8xTEEyOVgiLCJuIjoia2lhbGkiLCJpZCI6MX0="
+        type: "token"   #options: none, basic, token
+        use_kiali_token: false
+        username: "kiali"
+      dashboards:
+      - name: "Istio Service Dashboard"
+        variables:
+          namespace: "var-namespace"
+          service: "var-service"
+      - name: "Istio Workload Dashboard"
+        variables:
+          namespace: "var-namespace"
+          workload: "var-workload"
+      - name: "Istio Mesh Dashboard"
+      - name: "Istio Control Plane Dashboard"
+      - name: "Istio Performance Dashboard"
+      - name: "Istio Wasm Extension Dashboard"
+      enabled: true
+      health_check_url: ""
+      in_cluster_url: "http://grafana.grafana.svc:3000"
+      is_core: false
+      url: "https://nms.app.ptalun.com"
+    istio:
+      component_status:
+        components:
+        - app_label: istiod
+          is_core: true
+          is_proxy: false
+          namespace: istio-system
+        - app_label: istio-ingressgateway
+          is_core: true
+          is_proxy: true
+          namespace: istio-system
+        - app_label: istio-egressgateway
+          is_core: false
+          is_proxy: true
+          namespace: istio-system
+        enabled: true
+    prometheus:
+      url: "http://prometheus.prometheus.svc:9090"
+    tracing:
+      enabled: false
+      url: ""
+  istio_namespace: "istio-system"
+  #kiali_feature_flags:
+  server:
+    web_fqdn: "kiali.app.ptalun.com"
+    web_port: "443"
+    #web_root: "/"
+    web_schema: "https"
+---

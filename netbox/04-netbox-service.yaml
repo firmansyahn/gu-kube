@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: keycloak
+  name: netbox
   labels:
-    app: keycloak
+    app: netbox
 spec:
   selector:
-    app: keycloak
+    app: netbox
   ports:
-  - name: http-keycloak
+  - name: http-netbox
     port: 8080
     protocol: TCP
     targetPort: 8080

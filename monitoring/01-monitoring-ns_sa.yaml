@@ -3,8 +3,8 @@ kind: Namespace
 metadata:
   name: monitoring
   labels:
-    app.kubernetes.io/component: node-exporter
-    app.kubernetes.io/part-of: monitoring-system
+    #app.kubernetes.io/component: node-exporter
+    app.kubernetes.io/part-of: monitoring
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -13,5 +13,5 @@ metadata:
   namespace: monitoring
   labels:
     app.kubernetes.io/component: node-exporter
-    app.kubernetes.io/part-of: monitoring-system
+    app.kubernetes.io/part-of: monitoring
 ---

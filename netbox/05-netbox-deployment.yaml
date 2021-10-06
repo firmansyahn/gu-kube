@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbox
+  namespace: netbox
+  labels: &Labels
+    app: netbox
+    app.kubernetes.io/component: netbox
+    app.kubernetes.io/part-of: monitoring
+    version: "3.0.3"
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *Labels
+  template:
+    metadata:
+      labels: *Labels
+    spec:
+      serviceAccountName: netbox
+      containers:
+      - name: netbox
+        image: quay.io/netboxcommunity/netbox:v3.0.3-ldap
+        ports:
+        - name: http
+          containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: netbox-config
+---

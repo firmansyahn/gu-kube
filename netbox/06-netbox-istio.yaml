@@ -1,0 +1,42 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: netbox-gateway
+  namespace: netbox
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http-netbox
+      protocol: HTTP
+    hosts:
+    - "netbox.app.example.id"
+  - port:
+      number: 443
+      name: https-netbox
+      protocol: HTTPS
+    tls:
+      credentialName: netbox-tls
+      mode: SIMPLE
+    hosts:
+    - "netbox.app.example.id"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: netbox
+  namespace: netbox
+spec:
+  hosts:
+  - "netbox.app.example.id"
+  gateways:
+  - netbox-gateway
+  http:
+  - route:
+    - destination:
+        host: netbox.netbox.svc.cluster.local
+        port:
+          number: 8080
+---

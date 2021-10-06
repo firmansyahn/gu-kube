@@ -12,7 +12,7 @@ spec:
       name: http-portainer
       protocol: HTTP
     hosts:
-    - "portainer.app.cluster.local"
+    - "portainer.app.example.id"
   - port:
       number: 443
       name: https-portainer
@@ -21,7 +21,7 @@ spec:
       mode: SIMPLE
       credentialName: portainer-tls
     hosts:
-    - "portainer.app.cluster.local"
+    - "portainer.app.example.id"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -30,7 +30,7 @@ metadata:
   namespace: portainer
 spec:
   hosts:
-  - "portainer.app.cluster.local"
+  - "portainer.app.example.id"
   gateways:
   - portainer-gw
   http:

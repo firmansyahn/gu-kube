@@ -100,3 +100,7 @@ istioctl pc clusters jenkins-8474c94b98-7nblc.jenkins --port 50000 --fqdn jenkin
 istioctl proxy-status 
 
 istioctl analyze --all-namespaces
+
+kubectl label namespace grafana istio-injection=enabled
+kubectl label namespace grafana istio-injection=enabled --overwrite
+kubectl label namespace grafana istio-injection=disabled
