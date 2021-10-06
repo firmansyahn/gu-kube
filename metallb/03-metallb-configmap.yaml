@@ -20,10 +20,10 @@ data:
       addresses:
       - ISTIO_INGRESS_DEFAULT_ADDRESS
       auto-assign: false
-    - name: istio-ingress-stg
+    - name: istio-ingress-app
       protocol: layer2
       addresses:
-      - ISTIO_INGRESS_STG_ADDRESS
+      - ISTIO_INGRESS_APP_ADDRESS
       auto-assign: false
     - name: istio-ingress-prd
       protocol: layer2
