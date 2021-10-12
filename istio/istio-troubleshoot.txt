@@ -12,6 +12,10 @@ echo 'SECURE_INGRESS_PORT : ' $SECURE_INGRESS_PORT
 echo 'TCP_INGRESS_PORT : ' $TCP_INGRESS_PORT
 ----------------------------------------------------------------
 
+istioctl x uninstall --purge && kubectl delete namespace istio-system
+
+----------------------------------------------------------------
+
 kubectl label namespace phpmyadmin istio-injection=enabled --overwrite
 kubectl get namespace -L istio-injection
 

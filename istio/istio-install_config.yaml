@@ -51,6 +51,5 @@ spec:
       gatewayTopology:
         numTrustedProxies: 2
   profile: default
-  values:
-
+  #values:
 ---
