@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cert-manager-cainjector
+  namespace: "cert-manager"
 spec:
   template:
     spec:
@@ -14,6 +15,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cert-manager
+  namespace: "cert-manager"
 spec:
   template:
     spec:
@@ -26,6 +28,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cert-manager-webhook
+  namespace: "cert-manager"
 spec:
   template:
     spec:
