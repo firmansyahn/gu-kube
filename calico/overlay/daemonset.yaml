@@ -16,8 +16,6 @@ spec:
               value: "Never"
             - name: CALICO_IPV4POOL_VXLAN
               value: "Always"
-            - name: CALICO_IPV4POOL_CIDR
-              value: "172.25.0.0/16"
             - name: FELIX_IPV6SUPPORT
               value: "true"
           livenessProbe:
