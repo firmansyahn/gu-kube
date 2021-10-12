@@ -8,4 +8,5 @@ resources:
   - ./03-metallb-configmap.yaml
 
 patchesStrategicMerge:
+  - ./overlay/namespace.yaml
   - ./overlay/deployment.yaml
