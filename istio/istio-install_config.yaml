@@ -14,6 +14,10 @@ spec:
       k8s:
         serviceAnnotations:
           metallb.universe.tf/address-pool: istio-ingress-default
+        tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
     - name: istio-ingressgateway-app
       enabled: true
       k8s:
@@ -36,6 +40,10 @@ spec:
           - name: tcp-50000
             port: 50000
             targetPort: 50000
+        tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
       label:
         istio: ingressgateway-app
     - name: istio-ingressgateway-prd
@@ -43,8 +51,18 @@ spec:
       k8s:
         serviceAnnotations:
           metallb.universe.tf/address-pool: istio-ingress-prd
+        tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
       label:
         istio: ingressgateway-prd
+    pilot:
+      k8s:
+        tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
   meshConfig:
     accessLogFile: /dev/stdout
     defaultConfig:
