@@ -5,6 +5,12 @@ metadata:
   namespace: istio-system
 spec:
   components:
+    base:
+      k8s:
+        tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
     cni:
       enabled: false
       namespace: kube-system
