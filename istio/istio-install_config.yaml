@@ -14,6 +14,11 @@ spec:
     cni:
       enabled: false
       namespace: kube-system
+      k8s:
+        tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
     ingressGateways:
     - name: istio-ingressgateway
       enabled: true
