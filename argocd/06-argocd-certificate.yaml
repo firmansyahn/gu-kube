@@ -35,5 +35,5 @@ spec:
   dnsNames:
   - argocd-server.argocd.svc
   - argocd-server.argocd.svc.cluster.local
-  - argocd.app.cluster.local
+  - argocd.app.example.id
 ---

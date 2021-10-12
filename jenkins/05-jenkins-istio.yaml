@@ -12,7 +12,7 @@ spec:
       number: 80
       protocol: HTTP
     hosts:
-    - "jenkins.app.cluster.local"
+    - "jenkins.app.example.id"
   - port:
       name: https-jenkins
       number: 443
@@ -21,13 +21,13 @@ spec:
       credentialName: jenkins-tls
       mode: SIMPLE
     hosts:
-    - "jenkins.app.cluster.local"
+    - "jenkins.app.example.id"
   - port:
       name: tcp-jnlp
       number: 50000
       protocol: TCP
     hosts:
-    - "jenkins.app.cluster.local"
+    - "jenkins.app.example.id"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -36,7 +36,7 @@ metadata:
   namespace: jenkins
 spec:
   hosts:
-  - "jenkins.app.cluster.local"
+  - "jenkins.app.example.id"
   gateways:
   - jenkins-gw
   http:

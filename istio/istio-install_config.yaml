@@ -27,18 +27,24 @@ spec:
           - name: tcp-5432
             port: 5432
             targetPort: 5432
+          - name: tcp-6379
+            port: 6379
+            targetPort: 6379
+          - name: status-port
+            port: 15021
+            targetPort: 15021
           - name: tcp-50000
             port: 50000
             targetPort: 50000
       label:
-        istio: istio-ingressgateway-app
+        istio: ingressgateway-app
     - name: istio-ingressgateway-prd
       enabled: true
       k8s:
         serviceAnnotations:
           metallb.universe.tf/address-pool: istio-ingress-prd
       label:
-        istio: istio-ingressgateway-prd
+        istio: ingressgateway-prd
   meshConfig:
     accessLogFile: /dev/stdout
     defaultConfig:

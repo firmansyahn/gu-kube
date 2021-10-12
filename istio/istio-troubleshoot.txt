@@ -51,10 +51,14 @@ istio-ingressgateway-5d76fcbfc9-nqst8.istio-system     SYNCED     SYNCED     SYN
 
 ----------------------------------------------------------------
 
+#Retrieve information about cluster configuration for the Envoy instance in a specific pod
 istioctl proxy-status httpbin-74fb669cc6-lxhrn.httpbin
 Clusters Match
 Listeners Match
 Routes Match (RDS last loaded at Wed, 08 Sep 2021 09:39:41 WIB)
+
+#Retrieve information about listener configuration for the Envoy instance in a specific pod
+istioctl proxy-config cluster argocd-server-7658ffc8d9-w5cqq.argocd
 
 ----------------------------------------------------------------
 istioctl proxy-config cluster -n istio-system istio-ingressgateway-5d76fcbfc9-nqst8
@@ -97,10 +101,16 @@ istioctl pc clusters jenkins-8474c94b98-7nblc.jenkins --port 50000 --direction i
 
 istioctl pc clusters jenkins-8474c94b98-7nblc.jenkins --port 50000 --fqdn jenkins.jenkins.svc.cluster.local --direction outbound -o json
 
-istioctl proxy-status 
+istioctl proxy-status
 
 istioctl analyze --all-namespaces
 
 kubectl label namespace grafana istio-injection=enabled
 kubectl label namespace grafana istio-injection=enabled --overwrite
 kubectl label namespace grafana istio-injection=disabled
+
+#Display the list of available profiles
+istioctl profile list
+
+#Display the configuration of a profile
+istioctl profile dump demo

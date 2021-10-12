@@ -3,18 +3,19 @@ kind: PersistentVolume
 metadata:
   name: portainer-pv
   labels:
-	app: portainer
-	type: local
+    app: portainer
+    app.kubernetes.io/part-of: dashboard
+    type: local
 spec:
-  storageClassName: local-hostpath
+  storageClassName: openebs-hostpath
   persistentVolumeReclaimPolicy: Retain
   claimRef:
-	name: portainer
-	namespace: portainer
+    name: portainer
+    namespace: portainer
   capacity:
-	storage: 10Gi
+    storage: 10Gi
   accessModes:
   - ReadWriteOnce
   hostPath:
-	path: "/data/portainer"
+    path: "/data/portainer"
 ---

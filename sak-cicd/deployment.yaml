@@ -21,7 +21,7 @@ spec:
         - cat
         tty: true
         resources:
-          limit:
+          limits:
             cpu: 250m
             memory: 512Mi
           requests:

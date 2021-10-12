@@ -14,7 +14,7 @@ spec:
     tls:
       httpsRedirect: true
     hosts:
-    - "argocd.app.example.org"
+    - "argocd.app.example.id"
   - port:
       name: https-argocd
       number: 443
@@ -23,7 +23,7 @@ spec:
       credentialName: argocd-server-tls
       mode: SIMPLE
     hosts:
-    - "argocd.app.example.org"
+    - "argocd.app.example.id"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -32,7 +32,7 @@ metadata:
   namespace: argocd
 spec:
   hosts:
-  - "argocd.app.example.org"
+  - "argocd.app.example.id"
   gateways:
   - argocd-gw
   http:

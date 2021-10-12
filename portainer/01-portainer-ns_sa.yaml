@@ -3,7 +3,6 @@ kind: Namespace
 metadata:
   name: portainer
   labels:
-    app.kubernetes.io/component: portainer
     app.kubernetes.io/part-of: dashboard
     istio-injection: enabled
 ---
