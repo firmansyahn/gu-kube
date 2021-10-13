@@ -5,8 +5,8 @@ namespace: argocd
 resources:
   - ./namespace.yaml
   - ./argocd-install.yaml
-  - ../argocd/05-argocd-istio.yaml
-  - ../argocd/06-argocd-certificate.yaml
+  - ./05-argocd-istio.yaml
+  - ./06-argocd-certificate.yaml
 
 patchesStrategicMerge:
   - ./overlay/configmap.yaml
