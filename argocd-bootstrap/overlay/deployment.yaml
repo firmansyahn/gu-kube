@@ -4,6 +4,7 @@ metadata:
   labels:
     app: argocd-server
   name: argocd-server
+  namespace: argocd
 spec:
   template:
     metadata:
@@ -22,6 +23,7 @@ metadata:
   labels:
     app: argocd-repo-server
   name: argocd-repo-server
+  namespace: argocd
 spec:
   template:
     metadata:
@@ -40,6 +42,7 @@ metadata:
   labels:
     app: argocd-redis
   name: argocd-redis
+  namespace: argocd
 spec:
   template: 
     metadata:
@@ -57,6 +60,7 @@ metadata:
   labels:
     app: argocd-dex-server
   name: argocd-dex-server
+  namespace: argocd
 spec:
   template:
     metadata:
@@ -74,6 +78,7 @@ metadata:
   labels:
     app: argocd-application-controller
   name: argocd-application-controller
+  namespace: argocd
 spec:
   template:
     metadata:
