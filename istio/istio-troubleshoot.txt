@@ -111,7 +111,7 @@ istioctl analyze --all-namespaces
 
 kubectl label namespace grafana istio-injection=enabled
 kubectl label namespace grafana istio-injection=enabled --overwrite
-kubectl label namespace grafana istio-injection=disabled
+kubectl label namespace grafana istio-injection=disabled --overwrite
 
 #Display the list of available profiles
 istioctl profile list
