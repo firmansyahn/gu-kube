@@ -31,9 +31,7 @@ spec:
    #postalCodes: ["12000"]
    #serialNumber: ["1234567890"]
   dnsNames:
-  - portainer
-  - portainer.portainer
   - portainer.portainer.svc
   - portainer.portainer.svc.cluster.local
-  - portainer.app.cluster.local
+  - portainer.app.example.id
 ---
