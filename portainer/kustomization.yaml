@@ -9,5 +9,6 @@ resources:
 patchesStrategicMerge:
   - ./overlay/namespace.yaml
   - ./overlay/volume.yaml
+  - ./overlay/service.yaml
   - ./overlay/deployment.yaml
 ---

@@ -3,7 +3,9 @@ kind: Kustomization
 
 resources:
   - ./openebs-operator-lite.yaml
+  - ./storageclass.yaml
 
 patchesStrategicMerge:
+  - ./overlay/service.yaml
   - ./overlay/deployment.yaml
 ---

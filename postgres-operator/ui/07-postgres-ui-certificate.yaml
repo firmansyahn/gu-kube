@@ -1,0 +1,31 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-operator-ui-certs
+  namespace: istio-system
+  labels:
+    app.kubernetes.io/component: postgres-operator-ui
+    app.kubernetes.io/part-of: database
+spec:
+  secretName: postgres-operator-ui-tls
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned-issuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  subject:
+    countries:
+    - ID
+    organizations:
+    - "Valkyrie"
+    organizationalUnits:
+    - "PostgreSQL UI"
+    localities:
+    - "Jakarta Selatan"
+    provinces:
+    - "DKI Jakarta"
+  dnsNames:
+  - pgsql-ui.app.example.id
+---

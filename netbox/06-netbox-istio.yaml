@@ -40,3 +40,14 @@ spec:
         port:
           number: 8080
 ---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: netbox
+  namespace: netbox
+spec:
+  host: netbox-server.netbox.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---

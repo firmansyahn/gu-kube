@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: postgres-operator-ui-gw
+  namespace: postgres-operator
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      name: http-postgres-operator
+      number: 80
+      protocol: HTTP
+    hosts:
+    - "pgsql-ui.app.example.id"
+  - port:
+      name: https-postgres-operator
+      number: 443
+      protocol: HTTPS
+    tls:
+      credentialName: postgres-operator-ui-tls
+      mode: SIMPLE
+    hosts:
+    - "pgsql-ui.app.example.id"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: postgres-operator-ui
+  namespace: postgres-operator
+spec:
+  hosts:
+  - "pgsql-ui.app.example.id"
+  gateways:
+  - postgres-operator-ui-gw
+  http:
+  - name: postgres-operator-ui
+    route:
+    - destination:
+        host: postgres-operator-ui.postgres-operator.svc.cluster.local
+        port:
+          number: 80
+---

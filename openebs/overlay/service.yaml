@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: openebs-ndm-cluster-exporter-service
+  namespace: openebs
+spec:
+  ports:
+    - name: http-metrics
+      port: 9100
+      targetPort: 9100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openebs-ndm-node-exporter-service
+  namespace: openebs
+spec:
+  ports:
+    - name: http-metrics
+      port: 9101
+      targetPort: 9101
+---

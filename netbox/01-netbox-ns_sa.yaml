@@ -3,15 +3,26 @@ kind: Namespace
 metadata:
   name: netbox
   labels:
-    app.kubernetes.io/part-of: monitoring
+    app.kubernetes.io/part-of: netbox
     istio-injection: enabled
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: netbox
+  name: netbox-server
   namespace: netbox
   labels:
-    app.kubernetes.io/component: netbox
-    app.kubernetes.io/part-of: monitoring
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: netbox-server
+    app.kubernetes.io/part-of: netbox
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: netbox-redis
+  namespace: netbox
+  labels:
+    app.kubernetes.io/component: redis
+    app.kubernetes.io/name: netbox-redis
+    app.kubernetes.io/part-of: netbox
 ---

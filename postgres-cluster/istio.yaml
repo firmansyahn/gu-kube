@@ -1,0 +1,30 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: fenrir-infra
+  namespace: postgres-cluster
+spec:
+  hosts:
+  - "fenrir-infra.postgres-cluster.svc"
+  - "fenrir-infra.postgres-cluster.svc.cluster.local"
+  - "fenrir-infra.postgres-cluster.svc.nebula.jkt.ptalun.com"
+  tcp:
+  - match:
+    - port: 5432
+    route:
+    - destination:
+        host: fenrir-infra.postgres-cluster.svc.cluster.local
+        port:
+          number: 5432
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: fenrir-infra
+  namespace: postgres-cluster
+spec:
+  host: fenrir-infra.postgres-cluster.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---

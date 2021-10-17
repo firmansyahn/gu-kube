@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-operator-ui
+  namespace: postgres-operator
+  labels:
+    app: postgres-operator-ui
+    application: postgres-operator-ui
+spec:
+  type: "ClusterIP"
+  selector:
+    name: "postgres-operator-ui"
+  ports:
+    - name: http-ui
+      port: 80
+      protocol: TCP
+      targetPort: 8081
+---

@@ -17,6 +17,14 @@ spec:
       labels: *Labels
     spec:
       securityContext: {}
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: node-role.kubernetes.io/worker
+                operator: Exists
       containers:
       - name: adminer
         image: adminer:4.8.1-standalone
@@ -40,8 +48,6 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-      nodeSelector:
-        node-role.kubernetes.io/worker: worker
 ---
 apiVersion: v1
 kind: Service

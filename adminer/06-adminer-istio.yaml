@@ -44,3 +44,14 @@ spec:
         port:
           number: 8080
 ---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: adminer
+  namespace: adminer
+spec:
+  host: adminer.adminer.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---

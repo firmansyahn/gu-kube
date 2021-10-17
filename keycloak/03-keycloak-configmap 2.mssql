@@ -7,12 +7,11 @@ metadata:
     app.kubernetes.io/component: keycloak
     app.kubernetes.io/part-of: iam
 data:
-  DB_VENDOR: postgres
-  DB_ADDR: <DB_HOST>
-  DB_USER: keycloak_user
-  DB_PASSWORD: <DB_PASSWORD>
+  DB_VENDOR: mssql
+  DB_ADDR: <db-host-address-string>\<db-user-string>
+  DB_USER: <db-user-string>
+  DB_PASSWORD: <db-password-string>
   DB_DATABASE: keycloak
-  DB_PORT: "5432"
-  DB_SCHEMA: public
+  DB_PORT: "55745"
   PROXY_ADDRESS_FORWARDING: "true"
 ---

@@ -1,0 +1,77 @@
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+
+metadata:
+  name: fenrir-infra
+  namespace: postgres-cluster
+  labels:
+    environment: production
+    team: fenrir
+
+spec:
+  teamId: "fenrir"
+  postgresql:
+    version: "13"
+  numberOfInstances: 3
+  allowedSourceRanges:
+  - 127.0.0.0/8
+  - 172.16.0.0/12
+  enableConnectionPooler: true
+  
+  users:
+    netbox_user: []
+    grafana_user: []
+    powerdns_user: []
+    keycloak_user: []
+    
+  databases:
+    netbox: netbox_user
+    grafana: grafana_user
+    powerdns: powerdns_user
+    keycloak: keycloak_user
+
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 1
+      preference:
+        matchExpressions:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+
+  patroni:
+    pg_hba:
+    - local     all             all                             trust
+    - hostssl   all             +zalandos    127.0.0.1/32       pam
+    - host      all             all          127.0.0.1/32       md5
+    - hostssl   all             +zalandos    ::1/128            pam
+    - host      all             all          ::1/128            md5
+    - local     replication     standby                         trust
+    - hostssl   replication     standby      all                md5
+    - hostnossl all             all          all                md5
+    - hostssl   all             +zalandos    all                pam
+    - hostssl   all             all          all                md5
+  #preparedDatabases: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 500m
+      memory: 500Mi
+
+#  spiloRunAsUser: 101
+#  spiloRunAsGroup: 103
+  spiloFSGroup: 103
+
+  tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+    operator: Exists
+
+  tls:
+    secretName: fenrir-infra-tls
+  volume:
+    size: "10Gi"
+    storageClass: openebs-hostpath
+---

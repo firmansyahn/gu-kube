@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: postgres-operator-ui
+  namespace: postgres-operator
+  labels:
+    app: postgres-operator-ui
+    application: postgres-operator-ui
+spec:
+  ingressClassName: istio
+  rules:
+    - host: pgsql-ui.app.ptalun.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: postgres-operator-ui
+                port:
+                  number: 80
+---

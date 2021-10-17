@@ -50,19 +50,20 @@ data:
 
   named.conf.local: |
     logging {
-        channel default_debug { file "/var/log/bind/default.log" versions 10 size 50m; severity dynamic; print-time yes; print-severity yes; print-category yes; };
+    //  channel default_debug { file "/var/log/bind/default.log" versions 10 size 50m; severity dynamic; print-time yes; print-severity yes; print-category yes; };
         channel client_file { file "/var/log/bind/client.log" versions 10 size 50m; severity dynamic; print-time yes; print-category yes; };
         channel queries_file { file "/var/log/bind/queries.log" versions 10 size 50m; severity dynamic; print-time yes; print-category yes; };
         channel resolver_file { file "/var/log/bind/resolver.log" versions 10 size 50m; severity dynamic; print-time yes; print-category yes; };
         channel security_file { file "/var/log/bind/security.log" versions 10 size 50m; severity dynamic; print-time yes; print-category yes; };
 
-        category client { client_file; };
+    //  category client { client_file; };
         category queries { queries_file; };
         category resolver { resolver_file; };
         category security { security_file; };
     };
 
-    view "custsuspend-view" { match-clients { custsuspend; };
+    view "custsuspend-view" {
+        match-clients { custsuspend; };
         recursion yes;
         allow-query-cache { none; };
 
@@ -99,6 +100,9 @@ data:
         zone "127.in-addr.arpa" { type master; file "/etc/bind/db.127"; };
         zone "0.in-addr.arpa" { type master; file "/etc/bind/db.0"; };
         zone "255.in-addr.arpa" { type master; file "/etc/bind/db.255"; };
+
+        zone "dxm.mci.net.id" { type forward; forward only; forwarders { 172.16.20.20; }; };
+        zone "jkt2.mci.net.id" { type forward; forward only; forwarders { 172.16.20.20; }; };
 
         include "/etc/bind/zones.rfc1918";
         include "/etc/bind/bind.keys";

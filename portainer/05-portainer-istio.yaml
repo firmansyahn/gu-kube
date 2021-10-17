@@ -43,3 +43,14 @@ spec:
         port:
           number: 9000
 ---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: portainer
+  namespace: portainer
+spec:
+  host: portainer.portainer.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---

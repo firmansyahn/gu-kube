@@ -4,19 +4,21 @@ metadata:
   name: bind9
   namespace: bind9
   labels: &Labels
-    app: bind9
+    app: bind9-ns1
     app.kubernetes.io/component: bind9
     app.kubernetes.io/part-of: domain-system
 spec:
   replicas: 1
   selector:
-    matchLabels: *Labels
+    matchLabels:
+      app: bind9-ns1
   template:
     metadata:
       labels: *Labels
       annotations:
         k8s.v1.cni.cncf.io/networks: '[{
           "name": "dmz1-201",
+          "namespace": "kube-public",
           "ips": [ "172.16.10.10" ],
           "default-route": ["172.16.10.1"]
         }]'
@@ -78,7 +80,7 @@ metadata:
     app.kubernetes.io/part-of: domain-system
 spec:
   selector:
-    app: bind9
+    app: bind9-ns1
   ports:
   - name: tcp-bind9
     port: 53

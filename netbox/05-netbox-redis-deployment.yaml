@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &Labels
+    app.kubernetes.io/component: redis
+    app.kubernetes.io/name: netbox-redis
+    app.kubernetes.io/part-of: netbox
+    version: v6.2.6
+  name: netbox-redis
+  namespace: netbox
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: netbox-redis
+  template:
+    metadata:
+      labels: *Labels
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: netbox-redis
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/part-of: netbox
+              topologyKey: kubernetes.io/hostname
+            weight: 5
+      containers:
+      - args:
+        - --save
+        - ""
+        - --appendonly
+        - "no"
+        image: redis:6.2.6-alpine
+        imagePullPolicy: Always
+        name: redis
+        ports:
+        - containerPort: 6379
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+      serviceAccountName: netbox-redis
+---

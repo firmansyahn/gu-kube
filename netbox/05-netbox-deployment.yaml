@@ -1,29 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: netbox
+  name: netbox-server
   namespace: netbox
   labels: &Labels
-    app: netbox
-    app.kubernetes.io/component: netbox
+    app: netbox-server
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: netbox-server
     app.kubernetes.io/part-of: monitoring
-    version: "3.0.3"
+    version: "v3.0.7"
 spec:
   replicas: 1
   selector:
-    matchLabels: *Labels
+    matchLabels:
+      app.kubernetes.io/name: netbox-server
   template:
     metadata:
       labels: *Labels
     spec:
-      serviceAccountName: netbox
       containers:
       - name: netbox
-        image: quay.io/netboxcommunity/netbox:v3.0.3-ldap
-        ports:
-        - name: http
-          containerPort: 8080
+        image: quay.io/netboxcommunity/netbox:v3.0.7-ldap
         envFrom:
         - configMapRef:
             name: netbox-config
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 128Mi
+        securityContext:
+          privileged: false
+      securityContext:
+        runAsUser: 101
+        #runAsGroup: 1000
+      serviceAccountName: netbox-server
 ---
