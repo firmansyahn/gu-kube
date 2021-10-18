@@ -124,6 +124,6 @@ spec:
     accessLogFile: /dev/stdout
     defaultConfig:
       gatewayTopology:
-        numTrustedProxies: 1
+        numTrustedProxies: 2
   profile: default
 ---

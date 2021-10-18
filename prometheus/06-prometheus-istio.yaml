@@ -12,7 +12,7 @@ spec:
       name: http-prom
       protocol: HTTP
     hosts:
-    - "prometheus.app.cluster.local"
+    - "prometheus.app.example.id"
   - port:
       number: 443
       name: https-prom
@@ -21,7 +21,7 @@ spec:
       credentialName: prometheus-tls
       mode: SIMPLE
     hosts:
-    - "prometheus.app.cluster.local"
+    - "prometheus.app.example.id"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -30,7 +30,7 @@ metadata:
   namespace: prometheus
 spec:
   hosts:
-  - "prometheus.app.cluster.local"
+  - "prometheus.app.example.id"
   gateways:
   - prometheus-gateway
   http:

@@ -7,11 +7,12 @@ metadata:
     app: adminer
     app.kubernetes.io/component: adminer
     app.kubernetes.io/part-of: database
-    version: "4.8.1"
+    version: "v4.8.1"
 spec:
   replicas: 1
   selector:
-    matchLabels: *Labels
+    matchLabels:
+      app: adminer
   template:
     metadata:
       labels: *Labels
@@ -43,11 +44,11 @@ spec:
           timeoutSeconds: 1            
         resources:
           limits:
-            cpu: 500m
-            memory: 250Mi
-          requests:
             cpu: 100m
-            memory: 100Mi
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
 ---
 apiVersion: v1
 kind: Service

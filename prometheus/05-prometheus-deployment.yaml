@@ -7,11 +7,13 @@ metadata:
     app: prometheus
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/part-of: monitoring
+    version: v2.30.3
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
-    matchLabels: *Labels
+    matchLabels:
+      app: prometheus
   template:
     metadata:
       annotations:
@@ -23,12 +25,22 @@ spec:
         sidecar.istio.io/userVolumeMount: '[{"name": "istio-certs", "mountPath": "/etc/istio-output-certs"}]' # mount the shared volume at sidecar proxy
       labels: *Labels
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - prometheus
+            topologyKey: "kubernetes.io/hostname"
       securityContext:
         fsGroup: 1001001
       serviceAccountName: prometheus
       containers:
       - name: prometheus
-        image: prom/prometheus:latest
+        image: prom/prometheus:v2.30.3
         imagePullPolicy: IfNotPresent
         args:
         - --config.file=/prometheus/config/prometheus.yaml
@@ -38,7 +50,7 @@ spec:
         - --web.enable-lifecycle
         ports:
         - containerPort: 9090
-          name: http-prometheus
+          name: http-prom
           protocol: TCP
         livenessProbe:
           httpGet:

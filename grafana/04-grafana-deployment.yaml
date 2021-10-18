@@ -12,7 +12,8 @@ spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
-    matchLabels: *Labels
+    matchLabels:
+      app: grafana
   template:
     metadata:
       labels: *Labels

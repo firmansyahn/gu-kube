@@ -11,7 +11,7 @@ spec:
       client_id: "kiali"
       disable_rbac: true
       insecure_skip_verify_tls: true
-      issuer_uri: "https://accounts.app.ptalun.com/auth/realms/alun"
+      issuer_uri: "https://sso.app.example.id/auth/realms/alun"
       scopes: ["openid", "profile", "email", "groups"]
       username_claim: "email"
   deployment:
@@ -47,7 +47,7 @@ spec:
       health_check_url: ""
       in_cluster_url: "http://grafana.grafana.svc:3000"
       is_core: false
-      url: "https://nms.app.ptalun.com"
+      url: "https://grafana.app.example.id"
     istio:
       component_status:
         components:
@@ -72,7 +72,7 @@ spec:
   istio_namespace: "istio-system"
   #kiali_feature_flags:
   server:
-    web_fqdn: "kiali.app.ptalun.com"
+    web_fqdn: "kiali.app.example.id"
     web_port: "443"
     #web_root: "/"
     web_schema: "https"

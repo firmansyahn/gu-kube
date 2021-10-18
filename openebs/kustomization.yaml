@@ -8,4 +8,5 @@ resources:
 patchesStrategicMerge:
   - ./overlay/service.yaml
   - ./overlay/deployment.yaml
+  - ./overlay/storageclass.yaml
 ---
