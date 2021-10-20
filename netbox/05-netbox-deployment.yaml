@@ -7,10 +7,11 @@ metadata:
     app: netbox-server
     app.kubernetes.io/component: server
     app.kubernetes.io/name: netbox-server
-    app.kubernetes.io/part-of: monitoring
+    app.kubernetes.io/part-of: netbox
     version: "v3.0.7"
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app.kubernetes.io/name: netbox-server

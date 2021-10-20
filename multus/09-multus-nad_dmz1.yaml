@@ -7,17 +7,75 @@ spec:
   config: '{
       "cniVersion": "0.3.1",
       "type": "macvlan",
+      "capabilities": { "ips": true },
       "master": "ens224.201",
       "mode": "bridge",
       "ipam": {
-        "type": "host-local",
-        "subnet": "172.16.10.0/24",
-        "rangeStart": "172.16.10.10",
-        "rangeEnd": "172.16.10.232",
-        "routes": [
-          { "dst": "0.0.0.0/0" }
-        ],
-        "gateway": "172.16.10.1"
+        "type": "static"
+      }
+    }'
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: dmz2-202
+  namespace: kube-public
+spec:
+  config: '{
+      "cniVersion": "0.3.1",
+      "type": "macvlan",
+      "master": "ens224.202",
+      "mode": "bridge",
+      "ipam": {
+        "type": "static"
+      }
+    }'
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: dmz3-203
+  namespace: kube-public
+spec:
+  config: '{
+      "cniVersion": "0.3.1",
+      "type": "macvlan",
+      "master": "ens224.203",
+      "mode": "bridge",
+      "ipam": {
+        "type": "static"
+      }
+    }'
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: dmz4-204
+  namespace: kube-public
+spec:
+  config: '{
+      "cniVersion": "0.3.1",
+      "type": "macvlan",
+      "master": "ens224.204",
+      "mode": "bridge",
+      "ipam": {
+        "type": "static"
+      }
+    }'
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: dmz5-205
+  namespace: kube-public
+spec:
+  config: '{
+      "cniVersion": "0.3.1",
+      "type": "macvlan",
+      "master": "ens224.205",
+      "mode": "bridge",
+      "ipam": {
+        "type": "static"
       }
     }'
 ---

@@ -9,6 +9,8 @@ metadata:
   name: netbox-redis
   namespace: netbox
 spec:
+  replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app.kubernetes.io/name: netbox-redis

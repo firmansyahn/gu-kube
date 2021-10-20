@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pdns-auth
+  namespace: pdns
+  labels:
+    app: pdns-auth
+    app.kubernetes.io/component: auth
+    app.kubernetes.io/component: pdns-auth
+    app.kubernetes.io/part-of: powerdns
+spec:
+  selector:
+    app.kubernetes.io/component: pdns-auth
+  ports:
+  - name: tcp-pdns
+    port: 53
+    protocol: TCP
+    targetPort: 53
+  - name: udp-pdns
+    port: 53
+    protocol: UDP
+    targetPort: 53
+  sessionAffinity: ClientIP
+  #type: LoadBalancer
+---

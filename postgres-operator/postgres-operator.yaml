@@ -5,20 +5,25 @@ metadata:
   namespace: postgres-operator
   labels:
     app: postgres-operator
-    application: postgres-operator
+    app.kubernetes.io/component: operator
+    app.kubernetes.io/name: postgres-operator
+    app.kubernetes.io/part-of: postgres-operator
     version: v1.7.0
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   strategy:
     type: "Recreate"
   selector:
     matchLabels:
-      app: postgres-operator
+      app.kubernetes.io/name: postgres-operator
   template:
     metadata:
       labels:
         app: postgres-operator
-        name: postgres-operator
+        app.kubernetes.io/component: operator
+        app.kubernetes.io/name: postgres-operator
+        app.kubernetes.io/part-of: postgres-operator
         version: v1.7.0
     spec:
       serviceAccountName: postgres-operator
