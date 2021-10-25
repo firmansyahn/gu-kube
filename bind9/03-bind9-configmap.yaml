@@ -26,7 +26,10 @@ data:
         recursing-file      "/var/cache/bind/named.recursing";
 
         zone-statistics yes;
+
         allow-query { any; };
+        allow-transfer { none; };
+        allow-update { none; };
 
         recursion yes;
 

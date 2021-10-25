@@ -15,13 +15,42 @@ spec:
         - effect: NoSchedule
           key: node-role.kubernetes.io/master
           operator: Exists
+    egressGateways:
+    - name: istio-egressgateway
+      enabled: true
+      k8s:
+        tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
     ingressGateways:
     - name: istio-ingressgateway
       enabled: true
       k8s:
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 2
+              preference:
+                matchExpressions:
+                - key: node-role.kubernetes.io/master
+                  operator: Exists
+        hpaSpec:
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: istio-ingressgateway
+          minReplicas: 1
+          maxReplicas: 5
+          metrics:
+          - type: Resource
+            resource:
+              name: cpu
+              targetAverageUtilization: 80
         serviceAnnotations:
           metallb.universe.tf/address-pool: istio-ingress-default
         service:
+          externalTrafficPolicy: Local  #possible using Calico CrossSubnet rule
           ports:
           - name: status-port
             port: 15021
@@ -54,6 +83,7 @@ spec:
                 - key: node-role.kubernetes.io/master
                   operator: Exists
         service:
+          externalTrafficPolicy: Local  #possible using Calico CrossSubnet rule
           ports:
           - name: tcp-3306
             port: 3306
@@ -90,6 +120,7 @@ spec:
                 - key: node-role.kubernetes.io/master
                   operator: Exists
         service:
+          externalTrafficPolicy: Local  #possible using Calico CrossSubnet rule
           ports:
           - name: status-port
             port: 15021
@@ -124,6 +155,6 @@ spec:
     accessLogFile: /dev/stdout
     defaultConfig:
       gatewayTopology:
-        numTrustedProxies: 2
+        numTrustedProxies: 1
   profile: default
 ---

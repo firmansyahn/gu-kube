@@ -3,8 +3,11 @@ kind: Kustomization
 
 resources:
   - ./calico-install.yaml
-  - ./04-calico-service_metrics.yaml
+  - ./calico-bgppeer.yaml
+  - ./calico-bgpconfiguration.yaml
+  - ./calico-service_metrics.yaml
 
 patchesStrategicMerge:
   - ./overlay/configmap.yaml
   - ./overlay/daemonset.yaml
+  - ./overlay/ippool.yaml

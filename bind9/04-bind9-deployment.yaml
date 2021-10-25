@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/part-of: domain-system
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: bind9-ns1
@@ -19,8 +20,8 @@ spec:
         k8s.v1.cni.cncf.io/networks: '[{
           "name": "dmz1-201",
           "namespace": "kube-public",
-          "ips": [ "172.16.10.10" ],
-          "default-route": ["172.16.10.1"]
+          "ips": [ "172.16.10.10/24", "2406:38c0:101:201::201/64" ],
+          "default-route": [ "172.16.10.1", "2406:38c0:101:201::1" ]
         }]'
     spec:
       containers:

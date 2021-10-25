@@ -118,3 +118,7 @@ istioctl profile list
 
 #Display the configuration of a profile
 istioctl profile dump demo
+
+
+#Install Calico Diskastes as Sidecar
+kubectl patch configmap -n istio-system istio-sidecar-injector --patch "$(cat calico-istio-inject-configmap.yaml)"

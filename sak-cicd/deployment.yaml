@@ -3,10 +3,11 @@ kind: Deployment
 metadata:
   labels: &Labels
     app: sak-cicd
-    version: "0.1.6"
+    version: v0.1.8
   name: sak-cicd
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: sak-cicd
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
       - name: sak-cicd
-        image: quay.io/firngl/sak-cicd:0.1.6
+        image: quay.io/firngl/sak-cicd:0.1.8
         command:
         - cat
         tty: true

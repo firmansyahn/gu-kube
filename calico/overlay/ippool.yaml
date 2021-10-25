@@ -1,0 +1,7 @@
+apiVersion: crd.projectcalico.org/v1
+kind: IPPool
+metadata:
+  name: default-ipv4-ippool
+spec:
+  vxlanMode: CrossSubnet
+---
