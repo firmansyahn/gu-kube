@@ -1,0 +1,11 @@
+apiVersion: crd.projectcalico.org/v1
+kind: FelixConfiguration
+metadata:
+  name: default
+spec:
+  policySyncPathPrefix: /var/run/nodeagent
+  prometheusMetricsEnabled: true
+  prometheusProcessMetricsEnabled: false
+  vxlanEnabled: false
+  wireguardEnabled: false
+---

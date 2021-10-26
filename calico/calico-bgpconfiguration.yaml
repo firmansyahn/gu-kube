@@ -1,16 +1,20 @@
-apiVersion: projectcalico.org/v3
+apiVersion: crd.projectcalico.org/v1
 kind: BGPConfiguration
 metadata:
   name: default
 spec:
   logSeverityScreen: Info
-  nodeToNodeMeshEnabled: true
-  asNumber: 63400
-  listenPort: 178
+  nodeToNodeMeshEnabled: false
+  asNumber: 64512
+  listenPort: 179
   serviceClusterIPs:
-  - cidr: 10.96.0.0/12
-  #- cidr: fd00:1234::/112
+  - cidr: 172.24.0.0/23
+  #- cidr: 2406:38c0:101:240::/64
   #serviceExternalIPs:
   #- cidr: 104.244.42.129/32
   #- cidr: 172.217.3.0/24
+  serviceLoadBalancerIPs:
+  - cidr: 172.16.18.111/32
+  - cidr: 172.16.18.112/32
+  - cidr: 172.16.18.113/32
 ---

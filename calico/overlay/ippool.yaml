@@ -3,5 +3,5 @@ kind: IPPool
 metadata:
   name: default-ipv4-ippool
 spec:
-  vxlanMode: CrossSubnet
+  natOutgoing: false
 ---

@@ -1,7 +1,9 @@
-apiVersion: projectcalico.org/v3
+apiVersion: crd.projectcalico.org/v1
 kind: BGPPeer
 metadata:
-  name: my-global-peer
+  name: munak-mtik-rt-jkt2
 spec:
-  peerIP: 192.20.30.40
+  peerIP: 172.16.18.1
   asNumber: 64567
+  sourceAddress: UseNodeIP
+---

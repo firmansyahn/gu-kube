@@ -9,12 +9,13 @@ metadata:
     prometheus.io/scheme: http
 spec:
   clusterIP: None
-  selector:
-    k8s-app: calico-node
+  ipFamilyPolicy: PreferDualStack
   ports:
   - name: http-metrics
     port: 9091
     targetPort: 9091
+  selector:
+    k8s-app: calico-node
 ---
 apiVersion: v1
 kind: Service
@@ -27,10 +28,11 @@ metadata:
     prometheus.io/scheme: http
 spec:
   clusterIP: None
-  selector:
-    k8s-app: calico-kube-controllers
+  ipFamilyPolicy: PreferDualStack
   ports:
   - name: http-metrics
     port: 9094
     targetPort: 9094
+  selector:
+    k8s-app: calico-kube-controllers
 ---

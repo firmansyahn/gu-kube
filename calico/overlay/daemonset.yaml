@@ -12,22 +12,8 @@ spec:
       containers:
         - name: calico-node
           env:
-            - name: CALICO_IPV4POOL_IPIP
-              value: "Never"
-            - name: CALICO_IPV4POOL_VXLAN
-              value: "Always"
+            - name: IP6
+              value: "autodetect"
             - name: FELIX_IPV6SUPPORT
               value: "true"
-          livenessProbe:
-            exec:
-              command:
-              - /bin/calico-node
-              - -felix-live
-              #- -bird-live
-          readinessProbe:
-            exec:
-              command:
-              - /bin/calico-node
-              - -felix-ready
-              #- -bird-ready
 ---
