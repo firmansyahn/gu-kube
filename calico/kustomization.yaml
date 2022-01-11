@@ -8,6 +8,6 @@ resources:
   - ./calico-service_metrics.yaml
 
 patchesStrategicMerge:
-  - ./overlay/daemonset.yaml
+# - ./overlay/daemonset.yaml
   - ./overlay/felixconfiguration.yaml
   - ./overlay/ippool.yaml
