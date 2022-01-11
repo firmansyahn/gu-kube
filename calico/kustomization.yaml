@@ -3,8 +3,8 @@ kind: Kustomization
 
 resources:
   - ./calico-install.yaml
-  - ./calico-bgppeer.yaml
-  - ./calico-bgpconfiguration.yaml
+# - ./calico-bgppeer.yaml
+# - ./calico-bgpconfiguration.yaml
   - ./calico-service_metrics.yaml
 
 #patchesStrategicMerge:
