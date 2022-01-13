@@ -5,4 +5,7 @@ resources:
   - https://openebs.github.io/charts/hostpath-operator.yaml
   - https://openebs.github.io/charts/jiva-operator.yaml
   - ./storageclass.yaml
+  
+patchesStrategicMerge:
+  - ./overlay/deployment.yaml
 ---
