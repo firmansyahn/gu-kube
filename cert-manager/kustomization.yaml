@@ -3,9 +3,10 @@ kind: Kustomization
 
 resources:
   - ./cert-manager.yaml
-  - ./01-acme-clusterissuer.yaml
-  - ./02-selfsigned-clusterissuer.yaml
+# - ./01-acme-clusterissuer.yaml
+# - ./02-selfsigned-clusterissuer.yaml
 
 patchesStrategicMerge:
   - ./overlay/namespace.yaml
   - ./overlay/deployment.yaml
+---
