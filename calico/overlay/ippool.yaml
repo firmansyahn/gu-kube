@@ -3,5 +3,6 @@ kind: IPPool
 metadata:
   name: default-ipv4-ippool
 spec:
+  ipipMode: CrossSubnet
   natOutgoing: false
 ---
