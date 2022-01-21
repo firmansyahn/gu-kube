@@ -9,5 +9,5 @@ resources:
 
 patchesStrategicMerge:
   - ./overlay/daemonset.yaml
-  - ./overlay/felixconfiguration.yaml
+# - ./overlay/felixconfiguration.yaml
 # - ./overlay/ippool.yaml
