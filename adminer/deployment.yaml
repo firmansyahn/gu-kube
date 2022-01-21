@@ -5,9 +5,6 @@ metadata:
   namespace: adminer
   labels: &Labels
     app: adminer
-    app.kubernetes.io/component: adminer
-    app.kubernetes.io/part-of: database
-    version: "v4.8.1"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -16,7 +13,9 @@ spec:
       app: adminer
   template:
     metadata:
-      labels: *Labels
+      labels:
+        app: adminer
+        version: "4.8.1"
     spec:
       securityContext: {}
       affinity:
@@ -50,6 +49,10 @@ spec:
           requests:
             cpu: 50m
             memory: 64Mi
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
 ---
 apiVersion: v1
 kind: Service
@@ -58,8 +61,6 @@ metadata:
   namespace: adminer
   labels:
     app: adminer
-    app.kubernetes.io/component: adminer
-    app.kubernetes.io/part-of: database
 spec:
   selector:
     app: adminer

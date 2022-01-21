@@ -3,9 +3,6 @@ kind: Certificate
 metadata:
   name: adminer-certs
   namespace: istio-system
-  labels:
-    app.kubernetes.io/component: adminer
-    app.kubernetes.io/part-of: database
 spec:
   secretName: adminer-tls
   issuerRef:
