@@ -7,7 +7,7 @@ metadata:
     app: keycloak
     app.kubernetes.io/component: keycloak
     app.kubernetes.io/part-of: iam
-    version: "v15.0.2"
+    version: "v16.1.0"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: keycloak
-        image: quay.io/keycloak/keycloak:15.0.2
+        image: quay.io/keycloak/keycloak:16.1.0
         env:
         - name: KEYCLOAK_USER
           valueFrom:

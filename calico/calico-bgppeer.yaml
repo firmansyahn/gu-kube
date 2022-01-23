@@ -3,7 +3,7 @@ kind: BGPPeer
 metadata:
   name: default-bgp-peer
 spec:
-  peerIP: 172.20.20.1
+  peerIP: 172.20.21.1
   asNumber: 64567
   sourceAddress: UseNodeIP
 ---
