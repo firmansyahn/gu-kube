@@ -4,7 +4,6 @@ calicoctl get felixconfiguration default -oyaml
 
 
 curl https://docs.projectcalico.org/manifests/alp/istio-inject-configmap-1.10.yaml -o calico-istio-inject-configmap.yaml
-
 kubectl patch configmap -n istio-system istio-sidecar-injector --patch "$(cat calico-istio-inject-configmap.yaml)"
 
 #Add Calico authorization services to the mesh

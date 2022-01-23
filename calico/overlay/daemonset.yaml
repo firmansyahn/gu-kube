@@ -14,6 +14,8 @@ spec:
           env:
             - name: CALICO_IPV4POOL_IPIP
               value: "Never"
+            - name: CALICO_IPV4POOL_NAT_OUTGOING
+              value: false
             - name: FELIX_IPTABLESBACKEND
               value: "NFT"
 ---
