@@ -1,0 +1,4 @@
+Query one of the broken workload endpoints and check its node name:
+calicoctl get workloadendpoints -n <namespace>
+calicoctl get workloadendpoints -and
+
